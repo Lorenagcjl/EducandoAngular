@@ -1,0 +1,22 @@
+<!-- calendario-eventos.component.html -->
+
+<div class="container mt-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Calendario de Eventos</h3>
+    <button class="btn btn-primary" *ngIf="puedeCrear()" (click)="onHoyClick()">
+      Crear Evento
+    </button>
+  </div>
+
+
+  <div *ngIf="cargando" class="text-center my-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Cargando eventos...</p>
+  </div>
+
+  <full-calendar
+    *ngIf="!cargando"
+    #calendar
+    [options]="calendarOptions"
+  ></full-calendar>
+</div>

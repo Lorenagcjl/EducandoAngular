@@ -1,0 +1,21 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <h2>Activación de Cuenta</h2>
+
+      <div *ngIf="cargando" class="alert alert-info mt-4">
+        Procesando activación de tu cuenta, por favor espera...
+      </div>
+
+      <div *ngIf="mensaje && !cargando" class="alert alert-success mt-4">
+        {{ mensaje }}
+      </div>
+
+      <div *ngIf="error && !cargando" class="alert alert-danger mt-4">
+        {{ error }}
+      </div>
+
+      <!-- /<a routerLink="/login" class="btn btn-primary mt-4" *ngIf="!cargando">Ir al inicio</a> -->
+    </div>
+  </div>
+</div>

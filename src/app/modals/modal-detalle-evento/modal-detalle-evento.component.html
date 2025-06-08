@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <h4 class="modal-title">Detalle del Evento</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <p><strong>Nombre del Evento:</strong> {{ evento.nombreEvento }}</p>
+  <p><strong>Descripción:</strong> {{ evento.descripcion || 'Sin descripción' }}</p>
+  <p><strong>Fecha:</strong> {{ evento.fechaEvento | date: 'fullDate' }}</p>
+  <p><strong>Inicio:</strong> {{ evento.inicioEvento || 'No especificado' }}</p>
+  <p><strong>Fin:</strong> {{ evento.finEvento || 'No especificado' }}</p>
+  <p><strong>Lugar:</strong> {{ evento.lugar || 'No especificado' }}</p>
+  <p><strong>Maquillaje:</strong> {{ evento.maquillaje || 'No especificado' }}</p>
+  <p><strong>Peinado:</strong> {{ evento.peinado || 'No especificado' }}</p>
+  <p><strong>Estado:</strong> {{ evento.estado ? 'Activo' : 'Inactivo' }}</p>
+  <p><strong>Creado por:</strong> {{ evento.nombreCreador || 'Desconocido' }}</p>
+
+  <div *ngIf="evento.imagenes?.length">
+    <h5>Imágenes del Evento</h5>
+    <div class="row">
+      <div class="col-md-4 mb-3" *ngFor="let img of evento.imagenes">
+        <div class="card h-100 shadow-sm">
+          <img [src]="obtenerUrlImagen(img.archivo)" class="card-img-top" alt="Imagen del evento" style="height: 160px; object-fit: cover;">
+          <div class="card-body text-center">
+            <a [href]="obtenerUrlImagen(img.archivo)" target="_blank" class="btn btn-sm btn-outline-primary me-2">Ver</a>
+            <a [href]="obtenerUrlImagen(img.archivo)" [download]="img.archivo" class="btn btn-sm btn-outline-success">Descargar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!evento.imagenes?.length">
+    <p>No hay imágenes disponibles para este evento.</p>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-danger me-auto" (click)="eliminar()">Eliminar</button>
+  <button class="btn btn-primary" (click)="editar()">Editar</button>
+  <button class="btn btn-secondary" (click)="activeModal.close()">Cerrar</button>
+</div>

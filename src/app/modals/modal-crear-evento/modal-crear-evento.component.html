@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <h5 class="modal-title">Crear Evento</h5>
+  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="eventoForm" (ngSubmit)="guardar()">
+    <div class="mb-3">
+      <label>Nombre</label>
+      <input type="text" class="form-control" formControlName="nombreEvento" maxlength="100">
+      <div *ngIf="f['nombreEvento'].invalid && enviado" class="text-danger">
+        El nombre es obligatorio (máx. 100 caracteres).
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label>Descripción</label>
+      <textarea class="form-control" formControlName="descripcion"></textarea>
+      <!-- Ya no es obligatorio, por eso no hay mensaje de error -->
+    </div>
+
+    <div class="mb-3">
+      <label>Fecha</label>
+      <input type="date" class="form-control" formControlName="fechaEvento">
+      <div *ngIf="f['fechaEvento'].invalid && enviado" class="text-danger">
+        Fecha inválida o pasada.
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label>Hora Inicio</label>
+      <input type="time" class="form-control" formControlName="inicioEvento">
+      <!-- Campo opcional: no se muestra mensaje de error -->
+    </div>
+
+    <div class="mb-3">
+      <label>Hora Fin</label>
+      <input type="time" class="form-control" formControlName="finEvento">
+      <!-- Campo opcional: no se muestra mensaje de error -->
+    </div>
+
+    <div class="mb-3">
+      <label>Lugar</label>
+      <input type="text" class="form-control" formControlName="lugar" maxlength="150">
+      <!-- Campo opcional: no se muestra mensaje de error -->
+    </div>
+
+    <div class="text-danger" *ngIf="error">{{ error }}</div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar</button>
+      <button type="submit" class="btn btn-primary">Crear</button>
+    </div>
+  </form>
+</div>

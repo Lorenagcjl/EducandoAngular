@@ -1,0 +1,147 @@
+<!-- Wrapper -->
+<div id="wrapper" class="d-flex">
+
+  <!-- Sidebar -->
+  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" [routerLink]="['/integrante']">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <i class="fas fa-laugh-wink"></i>
+      </div>
+      <div class="sidebar-brand-text mx-3">Educando Ecuador Internacional</div>
+    </a>
+
+    <hr class="sidebar-divider my-0" />
+
+    <!-- Nav Item - Dashboard --> 
+    <li class="nav-item active">
+      <a class="nav-link" [routerLink]="['/integrante']">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>INICIO</span> 
+      </a>
+    </li>
+
+    <hr class="sidebar-divider" />
+
+    <div class="sidebar-heading">Integrante</div>
+
+    <!-- Nav Items -->
+    <li class="nav-item" *ngFor="let item of menuItems">
+      <a class="nav-link" [routerLink]="[item.route]" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    </li>
+
+    <hr class="sidebar-divider d-none d-md-block" />
+
+    <!-- Sidebar Toggler -->
+    <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" (click)="toggleSidebar()" id="sidebarToggle"></button>
+    </div>
+
+  </ul>
+  <!-- End of Sidebar -->
+
+  <!-- Content Wrapper -->
+  <div id="content-wrapper" class="d-flex flex-column flex-grow-1">
+
+    <!-- Main Content -->
+    <div id="content">
+
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+        <!-- Sidebar Toggle (Topbar) -->
+        <button
+          id="sidebarToggleTop"
+          class="btn btn-link d-md-none rounded-circle mr-3"
+          (click)="toggleSidebar()"
+          aria-label="Toggle sidebar"
+        >
+          <i class="fa fa-bars"></i>
+        </button>
+
+        <!-- Topbar Navbar -->
+        <ul class="navbar-nav ml-auto">
+
+          <!-- Notificaciones -->
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link" [routerLink]="['/notificaciones']" id="alertsDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-bell fa-fw"></i>
+              <span *ngIf="notificacionesCount > 0" class="badge badge-danger badge-counter">{{ notificacionesCount }}</span>
+            </a>
+          </li>
+
+          <!-- Mensajes (placeholder) -->
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link" href="#" aria-label="Mensajes">
+              <i class="fas fa-envelope fa-fw"></i>
+              <span class="badge badge-success badge-counter"></span>
+            </a>
+          </li>
+
+          <div class="topbar-divider d-none d-sm-block"></div>
+
+          <!-- Usuario -->
+          <li class="nav-item dropdown no-arrow">
+            <a
+              class="nav-link dropdown-toggle"
+              id="userDropdown"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+              href="#"
+              (click)="$event.preventDefault()"
+              data-toggle="dropdown"
+            >
+              <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ nombreUsuario }}</span>
+              <img
+                class="img-profile rounded-circle"
+                [src]="fotoPerfil || 'assets/img/undraw_profile.svg'"
+                alt="Foto de perfil"
+              />
+            </a>
+            <div
+              class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+              aria-labelledby="userDropdown"
+            >
+              <a class="dropdown-item" [routerLink]="['/perfil']">
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Perfil
+              </a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" (click)="logout()">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Salir
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- End of Topbar -->
+
+      <!-- Main Page Content -->
+      <div class="container-fluid">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="sticky-footer bg-white mt-auto">
+      <div class="container my-auto">
+        <div class="copyright text-center my-auto">
+          <span>Copyright &copy; Educando Ecuador Internacional 2025</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!-- End of Content Wrapper -->
+</div>
+<!-- End of Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top" (click)="scrollToTop()" aria-label="Scroll to top">
+  <i class="fas fa-angle-up"></i>
+</a>

@@ -1,0 +1,50 @@
+/* Imagen borrosa de fondo de toda la pantalla */
+.login-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url('/img/Fondoeei.png') no-repeat center center/cover;
+    filter: blur(10px);
+    z-index: -1;
+  }
+}
+
+/* Contenedor principal */
+.login-box {
+  width: 100%;
+  max-width: 900px;
+  height: 500px;
+  display: flex;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+/* Columna izquierda con imagen clara */
+.left-panel {
+  background: url('/img/Fondoeei.png') no-repeat center center/cover;
+}
+
+/* Columna derecha con efecto de vidrio */
+.bg-glass {
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  color: white;
+}
+
+/* Inputs transparentes y estilizados */
+.form-control {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+}
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}

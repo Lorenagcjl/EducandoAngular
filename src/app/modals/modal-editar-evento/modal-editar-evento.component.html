@@ -1,0 +1,59 @@
+<div class="modal-header">
+  <h4 class="modal-title">Editar Evento</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <form>
+    <div class="mb-2">
+      <label class="form-label">Nombre:</label>
+      <input type="text" class="form-control" [(ngModel)]="evento.nombreEvento" name="nombreEvento" required>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Descripción:</label>
+      <textarea class="form-control" [(ngModel)]="evento.descripcion" name="descripcion" rows="2"></textarea>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Fecha:</label>
+      <input type="date" class="form-control" [(ngModel)]="evento.fechaEvento" name="fechaEvento" required>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label class="form-label">Inicio:</label>
+        <input type="time" class="form-control" [(ngModel)]="evento.inicioEvento" name="inicioEvento">
+      </div>
+      <div class="col">
+        <label class="form-label">Fin:</label>
+        <input type="time" class="form-control" [(ngModel)]="evento.finEvento" name="finEvento">
+      </div>
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Lugar:</label>
+      <input type="text" class="form-control" [(ngModel)]="evento.lugar" name="lugar">
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Maquillaje:</label>
+      <input type="text" class="form-control" [(ngModel)]="evento.maquillaje" name="maquillaje">
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Peinado:</label>
+      <input type="text" class="form-control" [(ngModel)]="evento.peinado" name="peinado">
+    </div>
+
+    <div class="mb-2">
+      <label class="form-label">Nuevas Imágenes:</label>
+      <input type="file" class="form-control" (change)="onFileChange($event)" multiple>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button class="btn btn-success" (click)="guardarCambios()">Guardar</button>
+  <button class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar</button>
+</div>

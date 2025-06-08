@@ -1,0 +1,17 @@
+::ng-deep .modal-backdrop {
+  z-index: 1040 !important;
+}
+
+::ng-deep .modal {
+  z-index: 1050 !important;
+  display: block;
+}
+
+::ng-deep .modal-content {
+  z-index: 1060 !important;
+  pointer-events: auto !important;
+}
+body, html {
+  overflow: visible !important;
+  position: static !important;
+}

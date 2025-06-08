@@ -1,0 +1,76 @@
+<div class="login-wrapper">
+  <div class="login-box row shadow-lg rounded-4 overflow-hidden">
+    <!-- Columna izquierda: imagen clara -->
+    <div class="col-md-6 d-none d-md-block left-panel">
+      <div class="d-flex flex-column justify-content-between h-100 p-5 text-white">
+        <div class="d-flex align-items-center gap-2">
+          <img src="/img/logo.png" alt="LogoEE" style="height: 40px;">
+          <h3 class="fw-bold m-0">Educando Ecuador</h3>
+        </div>
+        <div>
+          <h4 class="fw-semibold">¡Bienvenido!</h4>
+          <p>Disfruta y brilla en el mundo artístico.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha: formulario con fondo borroso -->
+    <div class="col-md-6 p-5 d-flex flex-column justify-content-center bg-glass text-white">
+      <h3 class="text-center mb-4">Iniciar Sesión</h3>
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+
+        <div class="mb-3">
+  <label for="correo" class="form-label">Correo</label>
+  <input id="correo" 
+  type="email" 
+  class="form-control"
+   formControlName="correo"
+         [class.is-invalid]="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched"
+         required>
+  <div *ngIf="loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched" class="invalid-feedback">
+    El correo es obligatorio y debe ser válido.
+  </div>
+</div>
+
+
+        <div class="mb-3">
+  <label for="contrasena" class="form-label">Contraseña</label>
+  <div class="input-group">
+    <input [type]="mostrarContrasena ? 'text' : 'password'" 
+    id="contrasena" 
+    class="form-control"
+    formControlName="contrasena"
+           [class.is-invalid]="loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched"
+           required>
+    <button type="button" 
+    class="btn btn-outline-secondary" 
+    (click)="toggleMostrarContrasena()" 
+    tabindex="-1">
+      <i class="bi" [ngClass]="mostrarContrasena ? 'bi-eye-slash' : 'bi-eye'"></i>
+    </button>
+  </div>
+  <div *ngIf="loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched" class="invalid-feedback">
+    La contraseña es obligatoria.
+  </div>
+</div>
+
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="recordar">
+            <label class="form-check-label" for="recordar">Recordarme</label>
+          </div>
+          <a [routerLink]="['/restablecer']" class="text-white text-decoration-none">¿Olvidó su contraseña?</a>
+        </div>
+
+        <button class="btn btn-primary w-100" type="submit" [disabled]="loginForm.invalid">
+          Ingresar
+        </button>
+
+        <div *ngIf="error" class="alert alert-danger mt-3">
+          {{ error }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
