@@ -1,0 +1,79 @@
+<div class="container mt-4">
+  <h3 class="mb-4 d-flex align-items-center">
+    <i class="bi bi-wallet2 me-2"></i> Mis Pagos
+  </h3>
+
+  <!-- Filtro por motivo -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="filtroMotivo" class="form-label fw-semibold">Filtrar por motivo:</label>
+      <input
+        id="filtroMotivo"
+        type="text"
+        class="form-control shadow-sm"
+        [(ngModel)]="filtroMotivo"
+        (input)="aplicarFiltro()"
+        placeholder="Ej. Inscripción, mensualidad..."
+      />
+    </div>
+  </div>
+
+  <!-- Estado de carga y error -->
+  <div *ngIf="cargando" class="alert alert-info">Cargando pagos...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <!-- Tabla responsiva con scroll -->
+  <div class="table-responsive" *ngIf="!cargando && pagosFiltrados.length > 0" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th>Motivo</th>
+          <th>Método</th>
+          <th>Valor</th>
+          <th>Fecha Transacción</th>
+          <th>Cuenta Bancaria</th>
+          <th>N° Comprobante</th>
+          <th>Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagosFiltrados">
+          <td>{{ pago.motivo }}</td>
+          <td>{{ pago.metodoPago }}</td>
+          <td>${{ pago.totalPagar?.toFixed(2) || pago.valor?.toFixed(2) || '0.00' }}</td>
+          <td>{{ pago.fechaTransaccion | date: 'shortDate' }}</td>
+          <td>{{ pago.cuenta }}</td>
+          <td>{{ pago.numeroComprobante }}</td>
+          <td>
+            <span
+              class="badge rounded-pill"
+              [ngClass]="{
+                'bg-warning text-dark': pago.estadoPago === 'Pendiente',
+                'bg-success': pago.estadoPago === 'Cancelado',
+                'bg-danger': pago.estadoPago === 'Rechazado',
+                'bg-secondary': !['Pendiente','Cancelado','Rechazado'].includes(pago.estadoPago || '')
+              }"
+            >
+              {{ pago.estadoPago || 'Desconocido' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button 
+              class="btn btn-outline-danger btn-sm btn-icon"
+              *ngIf="pago.estadoPago === 'Pendiente'"
+              (click)="eliminarPago(pago.idPago)"
+              title="Eliminar pago">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Sin resultados -->
+  <div *ngIf="!cargando && pagosFiltrados.length === 0" class="alert alert-info text-center">
+    No se encontraron pagos con ese motivo.
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <h3 class="mb-4 fw-bold d-flex align-items-center text-primary">
+    <i class="bi bi-people-fill me-2"></i> Gestión de Asistencias
+  </h3> 
+
+  <ul class="nav nav-tabs nav-tabs-custom mb-3">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="tabActiva === 'integrantes'" (click)="tabActiva = 'integrantes'" href="javascript:void(0)">
+        <i class="bi bi-people-fill me-1"></i> Integrantes
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="tabActiva === 'tomar'" (click)="tabActiva = 'tomar'" href="javascript:void(0)">
+        <i class="bi bi-pencil-square me-1"></i> Tomar Asistencia
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="tabActiva === 'resumen'" (click)="tabActiva = 'resumen'" href="javascript:void(0)">
+        <i class="bi bi-clipboard-data me-1"></i> Resumen
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content-animated">
+    <div class="tab-content mt-3" *ngIf="tabActiva === 'integrantes'">
+      <app-integrantes></app-integrantes>
+    </div>
+    <div class="tab-content mt-3" *ngIf="tabActiva === 'tomar'">
+      <app-asistencias></app-asistencias>
+    </div>
+    <div class="tab-content mt-3" *ngIf="tabActiva === 'resumen'">
+      <app-resumen-asistencias></app-resumen-asistencias>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,217 @@
+
+<div class="table-responsive" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+  <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+    <thead class="table-primary position-sticky top-0">
+      <tr>
+        <th>ID</th>
+        <th>Año</th>
+        <th>Mes</th>
+        <th>Cuenta</th>
+        <th>Monto</th>
+        <th>IVA (15%)</th>
+        <th>Total</th>
+        <th>Tipo</th>
+        <th>Fecha Máxima de Pago</th>
+        <th>Estado</th>
+        <th class="text-center">Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rubro of rubros">
+        <td>{{ rubro.idRubro }}</td>
+        <td>{{ rubro.anio }}</td>
+        <td>{{ rubro.mes }}</td>
+        <td>{{ rubro.cuenta }}</td>
+        <td>${{ rubro.monto.toFixed(2) }}</td>
+        <td>${{ rubro.iva.toFixed(2) }}</td>
+        <td>${{ rubro.totalPagar.toFixed(2) }}</td>
+        <td>{{ rubro.tipoRubro }}</td>
+        <td>{{ rubro.fechaMaximaPagar | date: 'shortDate' }}</td>
+        <td>
+          <span class="badge bg-warning text-dark" *ngIf="rubro.estado === 'Pendiente'">Pendiente</span>
+          <span class="badge bg-success" *ngIf="rubro.estado === 'Cancelado'">Cancelado</span>
+          <span class="badge bg-danger" *ngIf="rubro.estado === 'Rechazado'">Rechazado</span>
+          <span class="badge bg-secondary" *ngIf="rubro.estado !== 'Pendiente' && rubro.estado !== 'Cancelado' && rubro.estado !== 'Rechazado'">
+            {{ rubro.estado }}
+          </span>
+        </td>
+        <td class="text-center">
+          <button 
+            class="btn btn-outline-primary btn-sm btn-icon"
+            *ngIf="rubro.estado === 'Pendiente'" 
+            (click)="abrirModal(rubro)"
+            [disabled]="rubro.idPago !== null"
+            title="Realizar pago">
+            <i class="bi bi-cash-coin"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot class="table-secondary">
+      <tr>
+        <td colspan="6" class="text-end"><strong>Total General a Pagar:</strong></td>
+        <td><strong>\${{ totalGeneral.toFixed(2) }}</strong></td>
+        <td colspan="4"></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Modal de Pago -->
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="rubroSeleccionado" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content shadow-lg">
+      <form (ngSubmit)="pagar(form)" #form="ngForm" novalidate>
+        
+        <!-- Header -->
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-credit-card-fill me-2"></i> Pagar Rubro #{{ rubroSeleccionado.idRubro }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+          <!-- Datos del Rubro -->
+          <div class="mb-3">
+            <div class="alert alert-light border shadow-sm">
+              <strong><i class="bi bi-bank2 me-1"></i> Cuenta:</strong> {{ rubroSeleccionado.cuenta }}<br />
+              <strong><i class="bi bi-currency-dollar me-1"></i> Valor:</strong> ${{ rubroSeleccionado.totalPagar.toFixed(2) }}<br />
+              <strong><i class="bi bi-calendar-event me-1"></i> Fecha límite:</strong> {{ rubroSeleccionado.fechaMaximaPagar | date: 'shortDate' }}
+            </div>
+          </div>
+
+          <!-- Motivo -->
+          <div class="mb-3">
+            <label for="motivo" class="form-label fw-semibold">Motivo <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="motivo"
+              name="motivo"
+              class="form-control"
+              [(ngModel)]="formulario.motivo"
+              required
+              #motivo="ngModel"
+              [ngClass]="{ 'is-invalid': motivo.invalid && motivo.touched }"
+              placeholder="Ej: Pago inscripción"
+            />
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Método de Pago -->
+          <div class="mb-3">
+            <label for="metodoPago" class="form-label fw-semibold">Método de Pago <span class="text-danger">*</span></label>
+            <select
+              id="metodoPago"
+              name="metodoPago"
+              class="form-select"
+              [(ngModel)]="formulario.metodoPago"
+              required
+              #metodoPago="ngModel"
+              [ngClass]="{ 'is-invalid': metodoPago.invalid && metodoPago.touched }"
+            >
+              <option value="">Seleccione un método</option>
+              <option value="Transferencia">TRANSFERENCIA</option>
+              <option value="Depósito">DEPÓSITO</option>
+            </select>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Número de Comprobante -->
+          <div class="mb-3">
+            <label for="numeroComprobante" class="form-label fw-semibold">Número de Comprobante <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="numeroComprobante"
+              name="numeroComprobante"
+              class="form-control"
+              [(ngModel)]="formulario.numeroComprobante"
+              required
+              #numeroComprobante="ngModel"
+              [ngClass]="{ 'is-invalid': numeroComprobante.invalid && numeroComprobante.touched }"
+              placeholder="Ej: 12345678"
+            />
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Fecha de Transacción -->
+          <div class="mb-3">
+            <label for="fechaTransaccion" class="form-label fw-semibold">Fecha de Transacción <span class="text-danger">*</span></label>
+            <input
+              type="date"
+              id="fechaTransaccion"
+              name="fechaTransaccion"
+              class="form-control"
+              [(ngModel)]="formulario.fechaTransaccion"
+              required
+              #fechaTransaccion="ngModel"
+              [ngClass]="{ 'is-invalid': fechaTransaccion.invalid && fechaTransaccion.touched }"
+            />
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Archivo Comprobante -->
+          <div class="mb-3">
+            <label for="archivo" class="form-label fw-semibold">Comprobante de Pago <span class="text-danger">*</span></label>
+            <input
+              type="file"
+              id="archivo"
+              name="archivo"
+              class="form-control"
+              accept=".pdf"
+              (change)="onArchivoSeleccionado($event)"
+              [class.is-invalid]="archivoInvalido"
+            />
+            <div class="form-text">Solo se admiten archivos PDF (máximo 5MB).</div>
+            <div *ngIf="archivoInvalido" class="text-danger small mt-1">
+              {{ mensajeArchivoInvalido }}
+            </div>
+
+            <!-- Vista previa del archivo -->
+            <div *ngIf="archivoSeleccionado" class="mt-3 alert alert-secondary d-flex justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i>
+                <strong>{{ archivoSeleccionado.name }}</strong>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="quitarArchivo()">
+                <i class="bi bi-x-circle-fill"></i> Quitar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="archivoInvalido"
+    title="Confirmar"
+  >
+    <i class="bi bi-check-circle"></i>
+  </button>
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    (click)="cerrarModal()"
+    title="Cancelar"
+  >
+    <i class="bi bi-x-circle"></i>
+  </button>
+</div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="alerta-pagos alerta-fija">
+  <ul>
+    <li>El pago inicial comprende <strong>(INSCRIPCIÓN + MENSUALIDAD)</strong> para tener acceso a toda la información.</li>
+    <li>Recuerde: una vez subido el comprobante de pago, en el transcurso de dos días laborables será legalizado.</li>
+    <li>En caso de haber subido erróneamente el pago, elimínelo y vuelva a subirlo, mientras el estado NO esté en <strong>CANCELADO</strong>.</li>
+    <li>Para eliminar un pago, ve a la sección <em>Mis Pagos</em>.</li>
+    <li>Consulta el estado de tus pagos en <em>Mis Pagos</em> para mantenerte informado.</li>
+  </ul>
+</div>

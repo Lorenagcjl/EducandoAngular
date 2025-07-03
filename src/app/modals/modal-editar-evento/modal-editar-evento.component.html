@@ -1,59 +1,97 @@
-<div class="modal-header">
-  <h4 class="modal-title">Editar Evento</h4>
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+<div class="modal-header bg-primary text-white">
+  <h5 class="modal-title d-flex align-items-center">
+    <i class="bi bi-pencil-square me-2"></i> Editar Evento
+  </h5>
+  <button type="button" class="btn-close btn-close-white" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
 </div>
 
-<div class="modal-body">
-  <form>
-    <div class="mb-2">
-      <label class="form-label">Nombre:</label>
-      <input type="text" class="form-control" [(ngModel)]="evento.nombreEvento" name="nombreEvento" required>
-    </div>
+<div class="modal-body bg-light">
+  <form novalidate>
+    <div class="row g-3">
 
-    <div class="mb-2">
-      <label class="form-label">Descripción:</label>
-      <textarea class="form-control" [(ngModel)]="evento.descripcion" name="descripcion" rows="2"></textarea>
-    </div>
+      <!-- NOMBRE -->
+      <div class="col-md-6">
+        <label class="form-label">Nombre <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" [(ngModel)]="evento.nombreEvento" name="nombreEvento" required>
+      </div>
 
-    <div class="mb-2">
-      <label class="form-label">Fecha:</label>
-      <input type="date" class="form-control" [(ngModel)]="evento.fechaEvento" name="fechaEvento" required>
-    </div>
+      <!-- FECHA -->
+      <div class="col-md-6">
+        <label class="form-label">Fecha <span class="text-danger">*</span></label>
+        <input type="date" class="form-control" [(ngModel)]="evento.fechaEvento" name="fechaEvento" required>
+      </div>
 
-    <div class="row">
-      <div class="col">
-        <label class="form-label">Inicio:</label>
+      <!-- HORA INICIO -->
+      <div class="col-md-6">
+        <label class="form-label">Hora Inicio</label>
         <input type="time" class="form-control" [(ngModel)]="evento.inicioEvento" name="inicioEvento">
       </div>
-      <div class="col">
-        <label class="form-label">Fin:</label>
+
+      <!-- HORA FIN -->
+      <div class="col-md-6">
+        <label class="form-label">Hora Fin</label>
         <input type="time" class="form-control" [(ngModel)]="evento.finEvento" name="finEvento">
       </div>
-    </div>
 
-    <div class="mb-2">
-      <label class="form-label">Lugar:</label>
-      <input type="text" class="form-control" [(ngModel)]="evento.lugar" name="lugar">
-    </div>
+      <!-- LUGAR -->
+      <div class="col-12">
+        <label class="form-label">Lugar</label>
+        <input type="text" class="form-control" [(ngModel)]="evento.lugar" name="lugar">
+      </div>
 
-    <div class="mb-2">
-      <label class="form-label">Maquillaje:</label>
-      <input type="text" class="form-control" [(ngModel)]="evento.maquillaje" name="maquillaje">
-    </div>
+      <!-- MAQUILLAJE -->
+      <div class="col-md-6">
+        <label class="form-label">Maquillaje</label>
+        <input type="text" class="form-control" [(ngModel)]="evento.maquillaje" name="maquillaje">
+      </div>
 
-    <div class="mb-2">
-      <label class="form-label">Peinado:</label>
-      <input type="text" class="form-control" [(ngModel)]="evento.peinado" name="peinado">
-    </div>
+      <!-- PEINADO -->
+      <div class="col-md-6">
+        <label class="form-label">Peinado</label>
+        <input type="text" class="form-control" [(ngModel)]="evento.peinado" name="peinado">
+      </div>
 
-    <div class="mb-2">
-      <label class="form-label">Nuevas Imágenes:</label>
-      <input type="file" class="form-control" (change)="onFileChange($event)" multiple>
+      <!-- DESCRIPCIÓN -->
+      <div class="col-12">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" rows="2" [(ngModel)]="evento.descripcion" name="descripcion"></textarea>
+      </div>
+
+      <!-- SUBIR IMÁGENES -->
+<div class="mb-3">
+  <label class="form-label fw-semibold">Imágenes del Evento <span class="text-danger">*</span></label>
+  <input
+    type="file"
+    class="form-control"
+    accept="image/*"
+    multiple
+    (change)="onArchivosSeleccionados($event)"
+  />
+  <div class="form-text">Puedes subir varias imágenes en formatos JPG, PNG, etc.</div>
+</div>
+
+      <!-- PREVISUALIZACIÓN -->
+      <div *ngIf="previewImagenes.length > 0" class="col-12">
+        <div class="row g-2 mt-2">
+          <div *ngFor="let img of previewImagenes; let i = index" class="col-md-3 position-relative">
+            <img [src]="img" class="img-thumbnail shadow" style="height: 150px; object-fit: cover;" />
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0"
+                    (click)="eliminarImagen(i)" style="z-index:10;">
+              &times;
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </form>
 </div>
 
-<div class="modal-footer">
-  <button class="btn btn-success" (click)="guardarCambios()">Guardar</button>
-  <button class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar</button>
+<div class="modal-footer border-0 mt-3">
+  <button class="btn btn-primary" (click)="guardarCambios()" title="Guardar" aria-label="Guardar">
+    <i class="bi bi-check-circle"></i>
+  </button>
+  <button class="btn btn-secondary" (click)="activeModal.dismiss()" title="Cancelar" aria-label="Cancelar">
+    <i class="bi bi-x-circle"></i>
+  </button>
 </div>

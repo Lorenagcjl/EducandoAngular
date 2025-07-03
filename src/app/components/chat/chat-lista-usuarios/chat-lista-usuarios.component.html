@@ -1,0 +1,19 @@
+<div>
+  <input
+    type="text"
+    class="form-control"
+    placeholder="Buscar usuario por nombre"
+    [(ngModel)]="terminoBusqueda"
+    (input)="onInputCambio()"
+  />
+</div>
+
+<ul class="list-group mt-3" *ngIf="usuarios.length > 0">
+  <li
+    class="list-group-item list-group-item-action"
+    *ngFor="let usuario of usuarios"
+    (click)="seleccionar(usuario)"
+  >
+    {{ usuario.nombres }}
+  </li>
+</ul>

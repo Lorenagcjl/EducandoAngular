@@ -2,17 +2,17 @@
 <div id="wrapper" class="d-flex">
 
   <!-- Sidebar -->
-  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+  <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
-    <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" [routerLink]="['/admin']">
-      <div class="sidebar-brand-icon rotate-n-15">
-        <i class="fas fa-laugh-wink"></i>
-      </div>
-      <div class="sidebar-brand-text mx-3">Educando Ecuador Internacional</div>
-    </a>
+<!-- Sidebar - Brand -->
+<a class="sidebar-brand d-flex align-items-center justify-content-center" [routerLink]="['/admin']">
+  <div class="sidebar-brand-icon">
+    <img src="/img/logo.png" alt="Logo Educando Ecuador" class="img-fluid" style="width: 100px; height: 40px;">
+  </div>
+  <div class="sidebar-brand-text mx-3">Educando Ecuador</div>
+</a>
 
-    <hr class="sidebar-divider my-0" />
+<hr class="sidebar-divider my-0" />
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
@@ -24,7 +24,7 @@
 
     <hr class="sidebar-divider" />
 
-    <div class="sidebar-heading">Administrador</div>
+    <div class="sidebar-heading">Admin</div>
 
     <!-- Nav Items -->
     <li class="nav-item" *ngFor="let item of menuItems">
@@ -67,65 +67,181 @@
         <ul class="navbar-nav ml-auto">
 
           <!-- Notificaciones -->
-          <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link" [routerLink]="['/notificaciones']" id="alertsDropdown" role="button" aria-haspopup="true" aria-expanded="false">
-              <i class="fas fa-bell fa-fw"></i>
-              <span *ngIf="notificacionesCount > 0" class="badge badge-danger badge-counter">{{ notificacionesCount }}</span>
-            </a>
-          </li>
+<li class="nav-item dropdown no-arrow mx-1">
+  <a class="nav-link" id="alertsDropdown" role="button" aria-haspopup="true" aria-expanded="false"
+     (click)="toggleDropdown($event)">
+    <i class="fas fa-bell fa-fw"></i>
+    <span *ngIf="notificacionesCount > 0" class="badge badge-danger badge-counter">{{ notificacionesCount }}</span>
+  </a>
+
+  <!-- Dropdown de notificaciones -->
+  <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+       *ngIf="mostrarDropdown" style="max-height: 300px; overflow-y: auto; width: 300px;">
+    <h6 class="dropdown-header">Notificaciones</h6>
+    <div class="dropdown-item text-end">
+  <button class="btn btn-sm btn-link text-primary" (click)="marcarTodasComoLeidas()">Marcar todas como leídas</button>
+</div>
+    
+    <ng-container *ngIf="notificaciones.length > 0; else sinNotificaciones">
+      <a *ngFor="let noti of notificaciones"
+   (click)="irADetalle(noti)"
+   class="dropdown-item d-flex align-items-center"
+   [ngClass]="{'notificacion-no-leida': !noti.leido}">
+  <div>
+    <div class="font-weight-bold text-truncate">{{ noti.titulo }}</div>
+    <div class="small text-gray-600">{{ noti.contenido }}</div>
+    <div class="small text-gray-400">{{ noti.fechaNotificacion | date:'short' }}</div>
+  </div>
+</a>
+    </ng-container>
+
+    <ng-template #sinNotificaciones>
+      <div class="dropdown-item text-center small text-gray-500">Sin notificaciones</div>
+    </ng-template>
+  </div>
+</li>
 
           <!-- Mensajes (placeholder) -->
-          <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link" href="#" aria-label="Mensajes">
-              <i class="fas fa-envelope fa-fw"></i>
-              <span class="badge badge-success badge-counter"></span>
-            </a>
-          </li>
+<li class="nav-item dropdown no-arrow mx-1">
+  <a class="nav-link position-relative" [routerLink]="['/admin/mensajes']" aria-label="Mensajes">
+    <i class="fas fa-envelope fa-fw"></i>
+    <span
+      *ngIf="cantidadNoLeidos > 0"
+      class="badge badge-success mensaje-badge"
+    >
+      {{ cantidadNoLeidos }}
+    </span>
+  </a>
+</li>
 
-          <div class="topbar-divider d-none d-sm-block"></div>
 
-          <!-- Usuario -->
+<div class="topbar-divider d-none d-sm-block"></div>
+
+<!-- Usuarios -->
           <li class="nav-item dropdown no-arrow">
-            <a
-              class="nav-link dropdown-toggle"
-              id="userDropdown"
-              role="button"
-              aria-haspopup="true"
-              aria-expanded="false"
-              href="#"
-              (click)="$event.preventDefault()"
-              data-toggle="dropdown"
-            >
-              <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ nombreUsuario }}</span>
-              <img
-                class="img-profile rounded-circle"
-                [src]="fotoPerfil || 'assets/img/undraw_profile.svg'"
-                alt="Foto de perfil"
-              />
-            </a>
-            <div
-              class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-              aria-labelledby="userDropdown"
-            >
-              <a class="dropdown-item" [routerLink]="['/perfil']">
-                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                Perfil
-              </a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" (click)="logout()">
-                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                Salir
-              </a>
-            </div>
-          </li>
+  <a
+  class="nav-link dropdown-toggle"
+  id="userDropdown"
+  role="button"
+  aria-haspopup="true" 
+  aria-expanded="false"
+  href="#"
+  (click)="$event.preventDefault()"
+  data-bs-toggle="dropdown"
+>
+  <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ nombreUsuario }}</span>
+  <img
+    class="img-profile rounded-circle actualizable"
+    [src]="fotoPerfil || '/img/usuario-default.png'"
+    alt="Foto de perfil"
+    (error)="onImageError($event)"
+  />
+</a>
+
+  <ul
+    class="dropdown-menu dropdown-menu-end shadow animated--grow-in"
+    aria-labelledby="userDropdown"
+  >
+    <li>
+      <a
+        class="dropdown-item"
+        [routerLink]="[rutaPerfil]"
+        (click)="$event.stopPropagation()"
+      >
+        <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
+        Perfil
+      </a>
+    </li>
+    <li><hr class="dropdown-divider" /></li>
+    <li>
+      <a
+        class="dropdown-item"
+        href="#"
+        (click)="logout(); $event.preventDefault(); $event.stopPropagation()"
+      >
+        <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
+        Salir
+      </a>
+    </li>
+  </ul>
+</li>
+
         </ul>
       </nav>
       <!-- End of Topbar -->
 
       <!-- Main Page Content -->
       <div class="container-fluid">
-        <router-outlet></router-outlet>
+
+  <!-- Bloque completo solo si mostrarCarrusel es true -->
+  <ng-container *ngIf="mostrarCarrusel">
+    <!-- Carrusel -->
+    <div id="dashboardCarousel" class="carousel slide shadow rounded mb-4" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="/img/bbbbb.jpg" class="d-block w-100" alt="Educando Ecuador - Presentación 1" style="max-height: 600px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Educando Ecuador en Acción</h5>
+            <p>Unidos por el arte y la disciplina.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="/img/bastos.jpg" class="d-block w-100" alt="Educando Ecuador - Presentación 2" style="max-height: 600px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Más de 14 años de trayectoria</h5>
+            <p>Llevando nuestro talento por el país y el mundo.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="/img/kids.jpg" class="d-block w-100" alt="Educando Ecuador - Presentación 3" style="max-height: 600px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Pasión por la música y el arte</h5>
+            <p>Formando artistas con valores y compromiso.</p>
+          </div>
+        </div>
       </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#dashboardCarousel" data-bs-slide="prev" aria-label="Anterior">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#dashboardCarousel" data-bs-slide="next" aria-label="Siguiente">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </button>
+    </div>
+
+    <!-- Cartas -->
+    <section id="sobre-nosotros" class="about-section text-white py-5">
+      <div class="container">
+        <div class="grid-container">
+          <div class="card">
+            <div class="title">MISIÓN</div>
+            <div class="icon"><i class="fa-solid fa-people-group"></i></div>
+            <div class="content">
+              <p>Fomentar la unión, la disciplina y el amor por el arte en niños y jóvenes ecuatorianos a través de la música y el bastoneo, integrando estudiantes de distintas instituciones en un espacio que promueve la cultura, el trabajo en equipo y la excelencia artística.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="title">VISIÓN</div>
+            <div class="icon"><i class="fa-solid fa-globe"></i></div>
+            <div class="content">
+              <p>Ser un referente nacional e internacional en la formación artística de bandas y bastoneras, reconocidos por nuestra trayectoria, calidad y compromiso con el desarrollo integral de nuestros integrantes, llevando el talento ecuatoriano a escenarios dentro y fuera del país.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="title">VALORES</div>
+            <div class="icon"><i class="fa-solid fa-drum"></i></div>
+            <div class="content">
+              <p>Disciplina, pasión, respeto, compromiso, compañerismo y amor por el arte. Estos valores son el corazón de Educando Ecuador y guían cada paso de nuestros miembros para crecer como artistas y como seres humanos.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <!-- Aquí va el contenido de los módulos -->
+  <router-outlet></router-outlet>
+
+</div>
     </div>
 
     <!-- Footer -->

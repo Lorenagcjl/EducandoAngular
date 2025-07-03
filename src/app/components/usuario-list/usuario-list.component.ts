@@ -117,34 +117,36 @@ export class UsuarioListComponent implements OnInit {
   }
 
   crearUsuario() {
-    if (this.formCrear.invalid) {
-      this.formCrear.markAllAsTouched();
-      return;
-    }
+  if (this.formCrear.invalid) {
+    this.formCrear.markAllAsTouched();
+    return;
+  }
 
-    this.creando = true;
-    const dto: UsuarioCreateDTO = this.formCrear.value;
+  this.creando = true;
+  const dto: UsuarioCreateDTO = {
+    ...this.formCrear.value,
+    nombres: this.formCrear.value.nombres.toUpperCase(),
+    apellidos: this.formCrear.value.apellidos.toUpperCase(),
+  };
 
-    this.solicitudesRegistroService.registrarUsuario(dto).subscribe({
-      next: () => {
-        this.creando = false;
-      this.errorCrear = null;  // limpiar error si hubo antes
+  this.solicitudesRegistroService.registrarUsuario(dto).subscribe({
+    next: () => {
+      this.creando = false;
+      this.errorCrear = null;
       this.exitoCrear = 'Se ha enviado un correo para activar la cuenta.';
       this.cargarUsuarios();
-      // Aquí NO cerramos modal automáticamente para que el usuario vea el mensaje
-      // Si quieres cerrarlo después de X segundos, podemos hacerlo:
       setTimeout(() => {
         this.cerrarModalCrear();
-        this.exitoCrear = null; // limpiar mensaje
-      }, 3000); // 3 segundos
+        this.exitoCrear = null;
+      }, 3000);
     },
     error: (err) => {
       this.creando = false;
-      this.exitoCrear = null; // limpiar éxito si hubo antes
+      this.exitoCrear = null;
       this.errorCrear = 'Error al registrar: ' + (err.error?.mensaje || err.message || 'Error desconocido');
     }
-    });
-  }
+  });
+}
 
   abrirModalEditar(usuario: UsuarioReadDTO) {
     this.mostrarModalEditar = true;
@@ -174,27 +176,32 @@ export class UsuarioListComponent implements OnInit {
   }
 
   editarUsuario() {
-    if (this.formEditar.invalid) {
-      this.formEditar.markAllAsTouched();
-      return;
-    }
-
-    this.editando = true;
-    const dto: UsuarioUpdateDTO = this.formEditar.value;
-
-    this.usuarioService.editarUsuario(dto.idUsuario, dto).subscribe({
-      next: () => {
-        this.exitoEditar = 'Usuario actualizado correctamente.';
-        this.editando = false;
-        this.cargarUsuarios();
-        setTimeout(() => this.cerrarModalEditar(), 1500);
-      },
-      error: () => {
-        this.errorEditar = 'Error al actualizar usuario.';
-        this.editando = false;
-      }
-    });
+  if (this.formEditar.invalid) {
+    this.formEditar.markAllAsTouched();
+    return;
   }
+
+  this.editando = true;
+
+  const dto: UsuarioUpdateDTO = {
+    ...this.formEditar.value,
+    nombres: this.formEditar.value.nombres.toUpperCase(),
+    apellidos: this.formEditar.value.apellidos.toUpperCase(),
+  };
+
+  this.usuarioService.editarUsuario(dto.idUsuario, dto).subscribe({
+    next: () => {
+      this.exitoEditar = 'Usuario actualizado correctamente.';
+      this.editando = false;
+      this.cargarUsuarios();
+      setTimeout(() => this.cerrarModalEditar(), 1500);
+    },
+    error: () => {
+      this.errorEditar = 'Error al actualizar usuario.';
+      this.editando = false;
+    }
+  });
+}
 
   getIdRol(nombre: string): number {
     const rol = this.roles.find(r => r.nombre.toLowerCase() === nombre.toLowerCase());

@@ -1,0 +1,70 @@
+.filtros-container {
+    background-color: #f8f9fa; /* fondo gris claro */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+  }
+
+  .filtros-container input,
+  .filtros-container select {
+    border-radius: 8px !important;
+    box-shadow: none;
+    transition: box-shadow 0.2s;
+  }
+
+  .filtros-container input:focus,
+  .filtros-container select:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  .filtros-container button {
+    border-radius: 8px;
+  }
+
+  .filtros-container .bi {
+    vertical-align: -0.125em;
+  }
+
+  /*Tabla*/
+  .tabla-contenedor {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .tabla-fija {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .tabla-fija thead {
+    background-color: #212529;
+    color: white;
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .tabla-fija tbody {
+    display: block;
+    max-height: 400px; /* Altura máxima visible */
+    overflow-y: auto;
+  }
+
+  .tabla-fija tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .tabla-fija th, .tabla-fija td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .tabla-fija tbody tr:hover {
+    background-color: #f8f9fa;
+  }

@@ -1,0 +1,84 @@
+<div class="mb-3 d-flex gap-3 align-items-center flex-wrap">
+  <input
+    type="text"
+    class="form-control w-auto"
+    placeholder="Buscar por nombre..."
+    [(ngModel)]="filtroNombre"
+    (input)="filtrarUsuarios()"
+    style="min-width: 200px;"
+  />
+
+  <label for="selectMes" class="form-label mb-0">Mes:</label>
+  <select id="selectMes" class="form-select w-auto" [(ngModel)]="filtroMes" (change)="onCambioMesAnio()">
+    <option *ngFor="let mes of meses" [value]="mes.value">{{ mes.nombre }}</option>
+  </select>
+
+  <label for="selectAnio" class="form-label mb-0">Año:</label>
+  <select id="selectAnio" class="form-select w-auto" [(ngModel)]="filtroAnio" (change)="onCambioMesAnio()">
+    <option *ngFor="let anio of anios" [value]="anio">{{ anio }}</option>
+  </select>
+</div>
+<button class="btn btn-primary" (click)="descargarPDF()">
+  <i class="bi bi-file-earmark-pdf"></i> Descargar PDF
+</button>
+<div class="table-responsive" style="max-height: 70vh; overflow: auto;">
+  <table class="table table-bordered table-hover align-middle text-center" style="min-width: 900px;">
+    <thead class="table-primary sticky-top">
+      <tr>
+        <th class="bg-white sticky-left text-start">Usuario / Evento</th>
+        <th *ngFor="let evento of eventosFiltrados">
+          {{ evento.nombreEvento }}<br />
+          <small class="text-muted">{{ evento.fechaEvento | date: 'shortDate' }}</small>
+        </th>
+        <th class="bg-white sticky-left text-start">Asistencia %</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let usuario of usuariosFiltrados">
+        <td class="bg-white sticky-left text-start">{{ usuario.nombreCompleto }}</td>
+
+        <td *ngFor="let evento of eventosFiltrados">
+          <div class="dropdown">
+            <button
+              class="btn btn-link dropdown-toggle p-0"
+              type="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              title="Haz clic para cambiar el estado"
+            >
+              <i
+                [class]="obtenerClaseIcono(obtenerEstado(usuario.idUsuario, evento.idEvento))"
+                style="font-size: 1.5rem;"
+              ></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" (click)="actualizarEstado(usuario.idUsuario, evento.idEvento, 'Presente')">
+                  <i class="bi bi-check-circle-fill text-success me-2"></i>Presente
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="actualizarEstado(usuario.idUsuario, evento.idEvento, 'Ausente')">
+                  <i class="bi bi-x-circle-fill text-danger me-2"></i>Ausente
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="actualizarEstado(usuario.idUsuario, evento.idEvento, 'Justificado')">
+                  <i class="bi bi-exclamation-circle-fill text-warning me-2"></i>Justificado
+                </a>
+              </li>
+            </ul>
+          </div>
+        </td>
+
+        <td class="bg-white sticky-left text-start fw-bold">
+          {{
+            usuario.resumenMensual.length > 0
+              ? usuario.resumenMensual[0].porcentaje + '%'
+              : '0%'
+          }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,15 @@
+/* Asegura que la primera columna se quede fija */
+.sticky-left {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+/* Mejora visual para la tabla */
+.table thead th {
+  white-space: nowrap;
+}
+
+.table td, .table th {
+  vertical-align: middle;
+}

@@ -1,0 +1,122 @@
+<div class="container mt-4">
+
+  <!-- Filtros -->
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="grupo" class="form-label">Grupo</label>
+      <select id="grupo" class="form-select" [(ngModel)]="grupoSeleccionado">
+        <option [ngValue]="1">Banda</option>
+        <option [ngValue]="2">Bastoneras</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="anio" class="form-label">Año</label>
+      <input
+        id="anio"
+        type="number"
+        class="form-control"
+        [(ngModel)]="anioSeleccionado"
+        min="2000"
+        max="2100"
+      />
+    </div>
+
+    <div class="col-md-3">
+      <label for="meses" class="form-label">Mes(es)</label>
+      <select
+        id="meses"
+        class="form-select"
+        multiple
+        [(ngModel)]="mesesSeleccionados"
+      >
+        <option *ngFor="let mes of meses; let i = index" [ngValue]="i + 1">
+          {{ mes }}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label for="nombre" class="form-label">Buscar por Nombre</label>
+      <input
+        id="nombre"
+        type="text"
+        class="form-control"
+        placeholder="Escribe un nombre..."
+        [(ngModel)]="nombreBuscado"
+      />
+    </div>
+  </div>
+
+  <div class="row mb-3">
+  <div class="col-md-3 d-flex align-items-end">
+    <button class="btn btn-primary w-100" (click)="cargarEstadoGrupo()" title="Consultar">
+      <i class="bi bi-search"></i>
+    </button>
+  </div>
+
+  <div class="col-md-3 d-flex align-items-end">
+    <button class="btn btn-danger w-100" (click)="descargarPDFGrupo()" title="Descargar PDF">
+      <i class="bi bi-file-earmark-pdf"></i>
+    </button>
+  </div>
+</div>
+
+  <!-- Tabla de estado por grupo agrupada con opción de descarga -->
+  <div *ngIf="estadoGrupo && estadoGrupo.length > 0" class="mt-4">
+    <div *ngFor="let usuario of estadoGrupo" class="mb-5">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="bg-light p-2 rounded shadow-sm mb-0">
+          <i class="bi bi-person-fill"></i> {{ usuario.nombreCompleto }}
+        </h5>
+        <button
+          class="btn btn-outline-danger btn-sm"
+          (click)="descargarEstadoPDF(usuario)"
+          title="Descargar PDF"
+        >
+          <i class="bi bi-file-earmark-pdf"></i>
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm text-center align-middle">
+          <thead class="table-primary">
+            <tr>
+              <th>Mes</th>
+              <th>Estado</th>
+              <th>Fecha Pago</th>
+              <th>Monto</th>
+              <th>Método</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detalle of usuario.detalles">
+              <td>{{ detalle.mes }}</td>
+              <td>
+  <span
+    class="badge rounded-pill"
+    [ngClass]="{
+      'bg-success': detalle.estadoPago === 'Pagado',
+      'bg-danger': detalle.estadoPago === 'No Pagado',
+      'bg-warning text-dark': detalle.estadoPago === 'Pendiente',
+      'bg-secondary': !['Pagado','No Pagado','Pendiente'].includes(detalle.estadoPago || '')
+    }"
+  >
+    {{ detalle.estadoPago || 'Desconocido' }}
+  </span>
+</td>
+
+              <td>{{ detalle.fechaPago || '-' }}</td>
+              <td>
+                {{ detalle.monto ? ('$' + detalle.monto.toFixed(2)) : '-' }}
+              </td>
+              <td>{{ detalle.metodo || '-' }}</td>
+              <td>{{ detalle.observaciones || '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

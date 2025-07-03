@@ -1,0 +1,78 @@
+<form [formGroup]="form" (ngSubmit)="enviar()" class="row g-3">
+  <div class="col-md-6">
+    <label>Nombres *</label>
+    <input type="text" class="form-control" formControlName="nombres" />
+    <div class="text-danger" *ngIf="form.get('nombres')?.touched && form.get('nombres')?.invalid">
+    <div *ngIf="form.get('nombres')?.errors?.['required']">Este campo es obligatorio.</div>
+    <div *ngIf="form.get('nombres')?.errors?.['pattern']">Solo se permiten letras y espacios.</div>
+  </div>
+  </div>
+
+  <div class="col-md-6">
+    <label>Apellidos *</label>
+    <input type="text" class="form-control" formControlName="apellidos" />
+    <div class="text-danger" *ngIf="form.get('apellidos')?.touched && form.get('apellidos')?.invalid">
+    <div *ngIf="form.get('apellidos')?.errors?.['required']">Este campo es obligatorio.</div>
+    <div *ngIf="form.get('apellidos')?.errors?.['pattern']">Solo se permiten letras y espacios.</div>
+  </div>
+  </div>
+
+  <div class="col-md-6">
+    <label>Cédula *</label>
+    <input type="text" class="form-control" formControlName="cedula" maxlength="10" />
+    <div class="text-danger" *ngIf="form.get('cedula')?.touched && form.get('cedula')?.invalid">
+    <div *ngIf="form.get('cedula')?.errors?.['required']">Este campo es obligatorio.</div>
+    <div *ngIf="form.get('cedula')?.errors?.['pattern']">La cédula debe tener 10 dígitos numéricos.</div>
+  </div>
+  </div>
+
+  <div class="col-md-6">
+    <label>Correo *</label>
+    <input type="email" class="form-control" formControlName="correo" />
+    <div class="text-danger" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+    <div *ngIf="form.get('correo')?.errors?.['required']">Este campo es obligatorio.</div>
+    <div *ngIf="form.get('correo')?.errors?.['email']">Ingrese un correo válido.</div>
+  </div>
+  </div>
+
+  <div class="col-md-6">
+    <label>Teléfono *</label>
+    <input type="text" class="form-control" formControlName="telefono" />
+    <div class="text-danger" *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid">
+    <div *ngIf="form.get('telefono')?.errors?.['required']">Este campo es obligatorio.</div>
+    <div *ngIf="form.get('telefono')?.errors?.['pattern']">Debe constar de 9 a 10 dígitos.</div>
+  </div>
+  </div>
+
+  <div class="col-md-6">
+    <label>Grupo *</label>
+    <select class="form-select" formControlName="idGrupo">
+      <option value="" disabled selected>Seleccione...</option>
+      <option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">{{ grupo.nombreGrupo }}</option>
+    </select>
+    <div class="text-danger" *ngIf="form.get('idGrupo')?.touched && form.get('idGrupo')?.invalid">
+    Debe seleccionar un grupo.
+  </div>
+  </div>
+
+  <div class="col-12">
+  <label>Observaciones *</label>
+  <textarea
+    rows="3"
+    class="form-control"
+    formControlName="observaciones"
+  ></textarea>
+
+  <div class="text-danger" *ngIf="form.get('observaciones')?.touched && form.get('observaciones')?.invalid">
+    <div *ngIf="form.get('observaciones')?.errors?.['required']">
+      Por favor, es necesario que llenes este campo.
+    </div>
+  </div>
+</div>
+
+  <div class="col-12 text-center">
+    <button [disabled]="loading" type="submit" class="btn btn-primary w-50">
+      {{ loading ? 'Enviando...' : 'Enviar Solicitud' }}
+    </button>
+  </div>
+</form>

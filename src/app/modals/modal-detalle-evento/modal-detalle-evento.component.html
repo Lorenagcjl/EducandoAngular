@@ -1,42 +1,99 @@
-<div class="modal-header">
-  <h4 class="modal-title">Detalle del Evento</h4>
-  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+<div class="modal-header bg-primary text-white">
+  <h4 class="modal-title"><i class="bi bi-calendar-event-fill me-2"></i>Detalle del Evento</h4>
+  <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="activeModal.dismiss()"></button>
 </div>
 
-<div class="modal-body">
-  <p><strong>Nombre del Evento:</strong> {{ evento.nombreEvento }}</p>
-  <p><strong>Descripción:</strong> {{ evento.descripcion || 'Sin descripción' }}</p>
-  <p><strong>Fecha:</strong> {{ evento.fechaEvento | date: 'fullDate' }}</p>
-  <p><strong>Inicio:</strong> {{ evento.inicioEvento || 'No especificado' }}</p>
-  <p><strong>Fin:</strong> {{ evento.finEvento || 'No especificado' }}</p>
-  <p><strong>Lugar:</strong> {{ evento.lugar || 'No especificado' }}</p>
-  <p><strong>Maquillaje:</strong> {{ evento.maquillaje || 'No especificado' }}</p>
-  <p><strong>Peinado:</strong> {{ evento.peinado || 'No especificado' }}</p>
-  <p><strong>Estado:</strong> {{ evento.estado ? 'Activo' : 'Inactivo' }}</p>
-  <p><strong>Creado por:</strong> {{ evento.nombreCreador || 'Desconocido' }}</p>
+<div class="modal-body" *ngIf="evento; else loading">
+  <div class="mb-3">
+    <h5 class="fw-bold">{{ evento.nombreEvento }}</h5>
+    <p class="text-muted">{{ evento.descripcion || 'Sin descripción' }}</p>
+  </div>
 
-  <div *ngIf="evento.imagenes?.length">
-    <h5>Imágenes del Evento</h5>
-    <div class="row">
-      <div class="col-md-4 mb-3" *ngFor="let img of evento.imagenes">
-        <div class="card h-100 shadow-sm">
-          <img [src]="obtenerUrlImagen(img.archivo)" class="card-img-top" alt="Imagen del evento" style="height: 160px; object-fit: cover;">
-          <div class="card-body text-center">
-            <a [href]="obtenerUrlImagen(img.archivo)" target="_blank" class="btn btn-sm btn-outline-primary me-2">Ver</a>
-            <a [href]="obtenerUrlImagen(img.archivo)" [download]="img.archivo" class="btn btn-sm btn-outline-success">Descargar</a>
-          </div>
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Fecha:</strong> {{ evento.fechaEvento | date: 'fullDate' }}</div>
+    <div class="col-md-3"><strong>Inicio:</strong> {{ evento.inicioEvento || 'N/D' }}</div>
+    <div class="col-md-3"><strong>Fin:</strong> {{ evento.finEvento || 'N/D' }}</div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6"><strong>Lugar:</strong> {{ evento.lugar || 'No especificado' }}</div>
+    <div class="col-md-3"><strong>Maquillaje:</strong> {{ evento.maquillaje || 'N/D' }}</div>
+    <div class="col-md-3"><strong>Peinado:</strong> {{ evento.peinado || 'N/D' }}</div>
+  </div>
+
+  <div class="mb-3">
+    <strong>Estado:</strong>
+    <span class="badge" [ngClass]="evento.estado ? 'bg-success' : 'bg-secondary'">
+      {{ evento.estado ? 'Activo' : 'Inactivo' }}
+    </span>
+  </div>
+
+  <div class="mb-4">
+    <strong>Creado por:</strong> {{ evento.nombreCreador || 'Desconocido' }}
+  </div>
+
+  <!-- Carrusel de imágenes con ajuste profesional -->
+<div *ngIf="imagenes.length > 0; else sinImagenes">
+  <div id="carouselImagenes" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner rounded shadow-sm">
+      <div class="carousel-item" *ngFor="let img of imagenes; let i = index" [ngClass]="{ active: i === 0 }">
+        <img
+          [src]="eventoService.obtenerUrlImagen(img)"
+          class="d-block mx-auto"
+          style="height: 300px; max-width: 100%; object-fit: contain;"
+          alt="Imagen del evento"
+        />
+        <div class="carousel-caption d-flex justify-content-end gap-2">
+          <button
+            (click)="descargarImagen(img)"
+            class="btn btn-sm btn-light shadow"
+            title="Descargar"
+            aria-label="Descargar"
+          >
+            <i class="bi bi-download"></i>
+          </button>
+          <button
+            *ngIf="puedeEliminarImagen() && !esVencido"
+            (click)="eliminarImagen(obtenerNombre(img))"
+            class="btn btn-sm btn-danger shadow"
+            title="Eliminar"
+            aria-label="Eliminar"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div *ngIf="!evento.imagenes?.length">
-    <p>No hay imágenes disponibles para este evento.</p>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselImagenes" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselImagenes" data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
   </div>
 </div>
 
-<div class="modal-footer">
-  <button class="btn btn-danger me-auto" (click)="eliminar()">Eliminar</button>
-  <button class="btn btn-primary" (click)="editar()">Editar</button>
-  <button class="btn btn-secondary" (click)="activeModal.close()">Cerrar</button>
+  <ng-template #sinImagenes>
+    <p class="text-muted">No hay imágenes disponibles para este evento.</p>
+  </ng-template>
 </div>
+
+<ng-template #loading>
+  <div class="text-center py-4">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p class="mt-2">Cargando datos del evento...</p>
+  </div>
+</ng-template>
+
+<div class="modal-footer bg-light">
+  <button *ngIf="puedeEditar()" class="btn btn-warning" (click)="editar()" [disabled]="esVencido" title="Editar" aria-label="Editar">
+    <i class="bi bi-pencil-square"></i>
+  </button>
+  <button *ngIf="puedeEliminar()" class="btn btn-danger" (click)="eliminar()" [disabled]="esVencido" title="Eliminar" aria-label="Eliminar">
+    <i class="bi bi-trash"></i>
+  </button>
+  <button class="btn btn-outline-secondary" (click)="activeModal.close()" title="Cerrar" aria-label="Cerrar">
+    <i class="bi bi-x-circle"></i>
+  </button>
+</div>
+

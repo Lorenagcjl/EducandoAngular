@@ -1,0 +1,12 @@
+input, textarea {
+  text-transform: uppercase;
+}
+.tooltip-error .tooltip-inner {
+  background-color: #dc3545; /* rojo Bootstrap */
+  color: white;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+.tooltip-error .tooltip-arrow::before {
+  border-top-color: #dc3545;
+}

@@ -1,0 +1,108 @@
+/* Solo para el dropdown de notificaciones (añade una clase extra en el HTML) */
+.dropdown-list.dropdown-menu {
+  display: block !important;
+  position: absolute;
+  will-change: transform;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.notificacion-no-leida {
+  background-color: #cad4ff;
+  font-weight: bold;
+}
+.mensaje-badge {
+  position: absolute;
+  top: 20px;      /* Ajusta la distancia vertical sobre el ícono */
+  right: 2px;    /* Ajusta la distancia horizontal sobre el ícono */
+  font-size: 0.6rem;
+  padding: 0.25em 0.4em;
+  border-radius: 9999px;
+  z-index: 10;
+}
+
+#accordionSidebar {
+  background: linear-gradient(135deg, #0d6efd, #6610f2) !important;
+}
+
+body {
+  background: #0f84c3;
+  padding: 2rem;
+  font-family: system-ui, sans-serif;
+}
+
+.grid-container {
+  width: min(75rem, 100%);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: 2rem;
+}
+
+/* Tarjetas de la sección SOBRE NOSOTROS */
+#sobre-nosotros .card {
+  --grad: red, blue; /* degradado más vivo */
+  padding: 2.5rem;
+  background: white;
+  border-radius: 2rem;
+  display: grid;
+  grid-template: 'title icon' 'content content' 'bar bar' / 1fr auto;
+  color: #5a5b5b;
+  box-shadow: 
+    inset -2px 2px hsl(61, 100%, 90%),
+    -20px 20px 40px hsla(187, 15%, 54%, 0.25);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#sobre-nosotros .card:hover {
+  transform: scale(1.05);
+  box-shadow:
+    inset -2px 2px hsl(0 0% 100% / 1),
+    -30px 30px 60px hsla(217, 100%, 87%, 0.35);
+}
+
+#sobre-nosotros .card .title {
+  font-size: 1.5rem;
+  grid-area: title;
+  align-self: end;
+  text-transform: uppercase;
+  font-weight: 700;
+  word-break: break-word;
+  color: #222;
+}
+
+#sobre-nosotros .card .icon {
+  grid-area: icon;
+  font-size: 3rem;
+  align-self: start;
+}
+
+#sobre-nosotros .card .icon > i {
+  color: transparent;
+  background: linear-gradient(to right, var(--grad));
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+#sobre-nosotros .card .content {
+  grid-area: content;
+  margin-top: 1rem;
+}
+
+#sobre-nosotros .card .content p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+#sobre-nosotros .card::after {
+  content: "";
+  grid-area: bar;
+  height: 4px;
+  border-radius: 2px;
+  background-image: linear-gradient(90deg, var(--grad));
+  margin-top: 1rem;
+}

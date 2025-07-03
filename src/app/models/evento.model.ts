@@ -10,7 +10,7 @@ export interface Evento {
   peinado?: string;
   estado?: boolean;
   nombreCreador?: string;
-  imagenes?: EventoImagen[];
+  imagenes?: string[];
 }
 
 export interface EventoImagen {

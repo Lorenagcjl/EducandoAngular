@@ -34,13 +34,22 @@ export class EventosService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  subirImagen(formData: FormData): Observable<any> {
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${this.authService.getToken()}`
-  });
-
-  return this.http.post(`${this.apiUrl}/subir-imagen`, formData, { headers });
+  subirImagen(formData: FormData) {
+  return this.http.post(`${this.apiUrl}/subir-imagen`, formData);
 }
-
+obtenerUrlImagen(nombreArchivo: string): string {
+  return `${this.apiUrl}/ver-imagen-nombre/${nombreArchivo}`;
+}
+descargarImagen(nombre: string): Observable<Blob> {
+ const headers = new HttpHeaders().set('Authorization', 'Bearer ' + this.authService.getToken());
+  return this.http.get(`https://localhost:7296/api/Evento/descargar-imagen/${nombre}`, {
+    headers,
+    responseType: 'blob'
+  });
+}
+eliminarImagen(nombreArchivo: string) {
+    const url = `${this.apiUrl}/eliminar-imagen/${nombreArchivo}`;
+    return this.http.delete(url, { responseType: 'text' }); // text para recibir mensaje plano
+  }
 
 }

@@ -1,0 +1,72 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+  <h3 class="text-center fw-bold d-flex align-items-center gap-2 text-primary flex-grow-1 mb-2 mb-sm-0">
+    <i class="bi bi-file-earmark-text"></i> Gestión de Documentos
+  </h3>
+  <!-- Mostrar solo para administrador -->
+  <button 
+    *ngIf="rolUsuario === 'Administrador'" 
+    class="btn btn-primary d-flex align-items-center flex-shrink-0"
+    (click)="abrirModal()"
+    title="Nuevo Documento"
+  >
+    <i class="bi bi-file-earmark-plus me-2"></i>
+    <span class="d-none d-sm-inline">Nuevo Documento</span>
+  </button>
+</div>
+
+
+  <div class="mb-3">
+    <label class="form-label">Filtrar por Tipo:</label>
+    <select [(ngModel)]="tipoSeleccionado" (change)="filtrarPorTipo()" class="form-select">
+      <option [ngValue]="0">TODOS</option>
+      <option *ngFor="let tipo of tiposDocumento" [ngValue]="tipo.id">{{ tipo.nombre }}</option>
+    </select>
+  </div>
+
+  <div *ngIf="documentos.length === 0" class="alert alert-info text-center">
+    No hay documentos disponibles.
+  </div>
+
+  <div *ngIf="documentos.length > 0" 
+       class="table-responsive" 
+       style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th scope="col">Título</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Archivo</th>
+          <!-- Columna acciones solo para administrador -->
+          <th *ngIf="rolUsuario === 'Administrador'" scope="col" class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let doc of documentos">
+          <td>{{ doc.titulo }}</td>
+          <td>{{ doc.descripcion }}</td>
+          <td>{{ doc.tipoDocumento }}</td>
+         <td class="text-center">
+  <button class="btn btn-outline-primary btn-sm btn-icon" 
+          (click)="descargar(doc.idDocumento)" 
+          title="Descargar documento">
+    <i class="bi bi-download"></i>
+  </button>
+</td>
+          <!-- Botón eliminar solo para administrador -->
+          <td *ngIf="rolUsuario === 'Administrador'" class="text-center">
+            <button 
+              class="btn btn-danger btn-sm btn-icon" 
+              (click)="confirmarEliminar(doc.idDocumento)" 
+              title="Eliminar documento">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-documento-form #modal (documentoCreado)="refrescar()"></app-documento-form>
+</div>

@@ -1,0 +1,187 @@
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0 fw-bold d-flex align-items-center gap-2 text-primary">
+      <i class="bi bi-file-earmark-person"></i> Mis Solicitudes
+    </h3>
+    <button class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#modalSolicitud" title="Nueva Solicitud">
+      <i class="bi bi-plus-lg"></i>
+      <span class="ms-2 d-none d-sm-inline">Nueva Solicitud</span>
+    </button>
+  </div>
+
+  <!-- Tabla de solicitudes -->
+  <div class="table-responsive" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr class="text-center">
+          <th scope="col">Título</th>
+          <th scope="col">Descripción</th>
+          <th scope="col">Tipo</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Archivo</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody> 
+        <tr *ngFor="let s of solicitudes">
+          <td>{{ s.titulo }}</td>
+          <td>{{ s.descripcion }}</td>
+          <td>{{ s.tipoDocumento }}</td>
+          <td class="text-center">
+  <span class="badge bg-warning text-dark" *ngIf="s.estadoSolicitud === 'Pendiente'">Pendiente</span>
+  <span class="badge bg-success" *ngIf="s.estadoSolicitud === 'Aprobado'">Aprobado</span>
+  <span class="badge bg-danger" *ngIf="s.estadoSolicitud === 'Rechazado'">Rechazado</span>
+  <span class="badge bg-secondary" *ngIf="s.estadoSolicitud !== 'Pendiente' && s.estadoSolicitud !== 'Aprobado' && s.estadoSolicitud !== 'Rechazado'">
+    {{ s.estadoSolicitud }}
+  </span>
+</td>
+
+          <td class="text-center">
+            <button class="btn btn-outline-primary btn-sm btn-icon" (click)="descargar(s.idSolicitud)" title="Descargar">
+              <i class="bi bi-download"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-outline-danger btn-sm btn-icon"
+              [disabled]="s.estadoSolicitud !== 'Pendiente'"
+              (click)="eliminar(s.idSolicitud)"
+              title="Eliminar">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="solicitudes.length === 0">
+          <td colspan="6" class="text-center text-muted">No tienes solicitudes registradas.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal para crear solicitud -->
+<div
+  class="modal fade"
+  id="modalSolicitud"
+  tabindex="-1"
+  aria-labelledby="modalSolicitudLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content shadow-sm border-0">
+      <form [formGroup]="form" (ngSubmit)="crearSolicitud()" enctype="multipart/form-data" novalidate>
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="modalSolicitudLabel">
+            <i class="bi bi-pencil-square me-2"></i> Nueva Solicitud
+          </h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="modal"
+            aria-label="Cerrar"
+          ></button>
+        </div>
+        <div class="modal-body row g-3">
+          <div class="col-md-6">
+            <label for="titulo" class="form-label fw-semibold">Título <span class="text-danger">*</span></label>
+            <input
+              formControlName="titulo"
+              type="text"
+              class="form-control"
+              id="titulo"
+              required
+              [class.is-invalid]="
+                form.get('titulo')?.invalid && (form.get('titulo')?.touched || form.get('titulo')?.dirty)
+              "
+              placeholder="Ej: Solicitud de certificado"
+            />
+            <div class="invalid-feedback">El título es obligatorio.</div>
+          </div>
+          <div class="col-md-6">
+            <label for="idTipoDocumento" class="form-label fw-semibold">Tipo de Documento <span class="text-danger">*</span></label>
+            <select
+              formControlName="idTipoDocumento"
+              class="form-select"
+              id="idTipoDocumento"
+              required
+              [class.is-invalid]="
+                form.get('idTipoDocumento')?.invalid && (form.get('idTipoDocumento')?.touched || form.get('idTipoDocumento')?.dirty)
+              "
+            >
+              <option value="" disabled selected>Seleccione</option>
+              <option *ngFor="let tipo of tiposDocumento" [value]="tipo.id">{{ tipo.nombre }}</option>
+            </select>
+            <div class="invalid-feedback">El tipo de documento es obligatorio.</div>
+          </div>
+          <div class="col-12">
+            <label for="descripcion" class="form-label fw-semibold">Descripción <span class="text-danger">*</span></label>
+            <textarea
+              formControlName="descripcion"
+              rows="3"
+              class="form-control"
+              id="descripcion"
+              required
+              [class.is-invalid]="
+                form.get('descripcion')?.invalid && (form.get('descripcion')?.touched || form.get('descripcion')?.dirty)
+              "
+              placeholder="Describe tu solicitud"
+            ></textarea>
+            <div class="invalid-feedback">La descripción es obligatoria.</div>
+          </div>
+          <div class="col-12">
+  <label for="archivo" class="form-label fw-semibold">
+    Archivo PDF <span class="text-danger">* </span> <small class="text-muted">(máx 5MB)</small>
+  </label>
+  <input
+    type="file"
+    (change)="onFileChange($event)"
+    accept="application/pdf"
+    class="form-control"
+    id="archivo"
+    required
+    [class.is-invalid]="archivoInvalido"
+    title="Archivo PDF (máx 5MB)"
+  />
+  <div class="form-text">Solo se permiten archivos PDF.</div>
+  <div *ngIf="archivoInvalido" class="text-danger small mt-1">{{ mensajeArchivoInvalido }}</div>
+
+  <!-- Visualización archivo seleccionado -->
+  <div
+    *ngIf="archivoSeleccionado && !archivoInvalido"
+    class="alert alert-secondary d-flex justify-content-between align-items-center mt-3 p-2"
+    style="font-size: 0.9rem;"
+  >
+    <div>
+      <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i>
+      <strong>{{ archivoSeleccionado.name }}</strong>
+    </div>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="quitarArchivo()">
+      <i class="bi bi-x-circle-fill"></i> Quitar
+    </button>
+  </div>
+</div>
+
+        </div>
+        <div class="modal-footer">
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="form.invalid || !archivoSeleccionado || archivoInvalido"
+    title="Enviar Solicitud"
+  >
+    <i class="bi bi-check-circle"></i>
+  </button>
+  <button
+    type="button"
+    class="btn btn-secondary"
+    data-bs-dismiss="modal"
+    aria-label="Cancelar"
+    title="Cancelar"
+  >
+    <i class="bi bi-x-circle"></i>
+  </button>
+</div>
+
+      </form>
+    </div>
+  </div>
+</div>

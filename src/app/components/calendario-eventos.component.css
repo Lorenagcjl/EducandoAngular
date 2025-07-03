@@ -1,0 +1,15 @@
+
+/* calendario-eventos.component.css */
+.fc .fc-toolbar-chunk {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fc .fc-toolbar {
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.fc .fc-button-group {
+  flex-wrap: wrap;
+}

@@ -1,0 +1,49 @@
+<div class="container mt-4">
+
+  <div *ngIf="cargando" class="alert alert-info">Cargando pagos pendientes...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="table-responsive" *ngIf="!cargando && pagos.length > 0" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th>Nombre</th>
+          <th>Motivo</th>
+          <th>Método</th>
+          <th>Valor</th>
+          <th>Cuenta</th>
+          <th>Fecha</th>
+          <th>Comprobante</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagos">
+          <td>{{ pago.nombres }}</td>
+          <td>{{ pago.motivo }}</td>
+          <td>{{ pago.metodoPago }}</td>
+          <td>${{ pago.totalPagar?.toFixed(2) || pago.valor?.toFixed(2) || '0.00' }}</td>
+          <td>{{ pago.cuenta }}</td>
+          <td>{{ pago.fechaTransaccion | date: 'shortDate' }}</td>
+          <td class="text-center">
+            <button class="btn btn-outline-primary btn-sm btn-icon" (click)="descargarComprobante(pago.idPago)" title="Descargar comprobante">
+              <i class="bi bi-download"></i>
+            </button>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-outline-success btn-sm btn-icon me-2" (click)="procesarPago(pago.idPago, true)" title="Aprobar">
+              <i class="bi bi-check-circle"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm btn-icon" (click)="procesarPago(pago.idPago, false)" title="Rechazar">
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!cargando && pagos.length === 0" class="alert alert-info">
+    No hay pagos pendientes.
+  </div>
+</div>

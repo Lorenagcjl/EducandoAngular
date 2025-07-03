@@ -1,0 +1,15 @@
+.alerta-solicitudes {
+  padding: 1rem;
+  font-size: 0.95rem;
+  border-left: 5px solid #dc3545;
+  background-color: #f8d7da;
+  color: #842029;
+  border-radius: 0.375rem;
+  margin-top: 1rem;
+}
+input, textarea {
+  text-transform: uppercase;
+}
+.tab-content-animated > div {
+  transition: opacity 0.3s ease-in-out;
+}

@@ -1,0 +1,70 @@
+<div class="container mt-4">
+
+  <!-- Filtros -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="Buscar por nombre" [(ngModel)]="nombre">
+    </div>
+    <div class="col-md-4">
+      <select class="form-control" [(ngModel)]="idGrupo">
+        <option [ngValue]="null">-- Todos los grupos --</option>
+        <option *ngFor="let grupo of grupos" [value]="grupo.idGrupo">{{ grupo.nombreGrupo }}</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex">
+      <button class="btn btn-primary me-2 flex-fill" (click)="aplicarFiltros()" title="Buscar">
+        <i class="bi bi-search"></i>
+      </button>
+      <button class="btn btn-secondary flex-fill" (click)="limpiarFiltros()" title="Limpiar filtros">
+        <i class="bi bi-x-circle"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla con scroll -->
+  <div class="table-responsive" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th>Usuario</th>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Tipo</th>
+          <th>Archivo</th>
+          <th>Fecha</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of solicitudes">
+          <td>{{ s.nombreUsuario }}</td>
+          <td>{{ s.titulo }}</td>
+          <td>{{ s.descripcion }}</td>
+          <td>{{ s.tipoDocumento }}</td>
+          <td class="text-center">
+            <button 
+              class="btn btn-outline-primary btn-sm btn-icon" 
+              (click)="descargar(s.idSolicitud, s.archivo)" 
+              [disabled]="!s.archivo"
+              title="Descargar PDF">
+              <i class="bi bi-download"></i>
+            </button>
+          </td>
+          <td>{{ s.fechaRegistro | date: 'yyyy-MM-dd' }}</td>
+          <td class="text-center">
+            <button class="btn btn-outline-success btn-sm btn-icon me-1" (click)="aprobar(s.idSolicitud)" title="Aprobar">
+              <i class="bi bi-check-circle"></i>
+            </button>
+            <button class="btn btn-outline-danger btn-sm btn-icon" (click)="rechazar(s.idSolicitud)" title="Rechazar">
+              <i class="bi bi-x-circle"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!solicitudes.length" class="alert alert-info mt-3">
+    No hay solicitudes registradas.
+  </div>
+</div>

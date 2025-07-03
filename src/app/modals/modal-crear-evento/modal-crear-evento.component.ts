@@ -27,9 +27,9 @@ export class ModalCrearEventoComponent implements OnInit {
       nombreEvento: ['', [Validators.required, Validators.maxLength(100)]],
       descripcion: [''],
       fechaEvento: ['', [Validators.required, fechaNoPasadaValidator()]],
-      inicioEvento: [''],
+      inicioEvento:['', Validators.required],
       finEvento: [''],
-      lugar: ['',Validators.maxLength(15)]
+      lugar: ['',Validators.maxLength(50)]
     });
   }
 

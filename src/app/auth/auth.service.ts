@@ -2,6 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient , HttpHeaders} from '@angular/common/http';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { Router } from '@angular/router'; //se agregó
 
 
 @Injectable({ providedIn: 'root' })
@@ -12,7 +13,7 @@ export class AuthService {
   private currentRoleSubject = new BehaviorSubject<string | null>(null);
   currentRole$ = this.currentRoleSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     const token = this.getToken();
     if (token) {
       const role = this.getRoleFromToken(token);
@@ -47,6 +48,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.currentRoleSubject.next(null);
+    this.router.navigate(['/login']); //se agregó
   }
 
   getToken(): string | null {
@@ -75,12 +77,10 @@ export class AuthService {
     return decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || null;
   }
 
-  // Aquí cambia la URL y nombre del método a la que está en backend
   solicitarToken(cedula: string) {
     return this.http.post(`${this.apiUrl}/recuperar`, { cedula });
   }
 
-  // Aquí cambia la URL y nombre del método para cambiar contraseña con token (recuperación)
   cambiarContrasenaPorToken(token: string, nuevaContrasena: string) {
     return this.http.post(`${this.apiUrl}/cambiar-contrasena-por-token`, {
       Token: token,

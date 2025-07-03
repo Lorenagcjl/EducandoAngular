@@ -1,0 +1,109 @@
+<div class="container mt-4">
+
+  <!-- Filtros -->
+  <div class="row g-3 align-items-end mb-3">
+    <div class="col-sm-6 col-md-4">
+      <label class="form-label">Buscar por nombre</label>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Ej. Juan Pérez"
+        [(ngModel)]="filtroNombre"
+        aria-label="Buscar por nombre"
+      />
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+      <label class="form-label">Grupo</label>
+      <select class="form-select" [(ngModel)]="filtroGrupo" aria-label="Filtrar por grupo">
+        <option [ngValue]="null">-- Seleccione grupo --</option>
+        <option [ngValue]="1">Banda</option>
+        <option [ngValue]="2">Bastoneras</option>
+      </select>
+    </div>
+
+    <div class="col-sm-6 col-md-3">
+      <label class="form-label">Mes</label>
+      <select class="form-select" [(ngModel)]="filtroMes" aria-label="Filtrar por mes">
+        <option [ngValue]="null">-- Seleccione mes --</option>
+        <option *ngFor="let mes of meses" [ngValue]="mes.valor">{{ mes.nombre }}</option>
+      </select>
+    </div>
+
+    <div class="col-sm-6 col-md-2">
+      <label class="form-label">Año</label>
+      <input
+        type="number"
+        class="form-control"
+        placeholder="Ej. 2025"
+        [(ngModel)]="filtroAnio"
+        aria-label="Filtrar por año"
+        min="2020"
+        max="2099"
+      />
+    </div>
+
+    <div class="col-auto mt-3 mt-md-0">
+      <label class="form-label d-none d-md-block">&nbsp;</label>
+      <div class="d-flex gap-2">
+        <button class="btn btn-primary" (click)="aplicarFiltro()" title="Aplicar filtros">
+          <i class="bi bi-funnel"></i>
+        </button>
+        <button class="btn btn-outline-secondary" (click)="limpiarFiltro()" title="Limpiar filtros">
+          <i class="bi bi-x-circle"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="cargando" class="alert alert-info">Cargando pagos procesados...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="table-responsive" *ngIf="!cargando && pagos.length > 0" style="max-height: 300px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Motivo</th>
+          <th>Método</th>
+          <th>Valor</th>
+          <th>Cuenta</th>
+          <th>Fecha</th>
+          <th>Estado</th>
+          <th>Comprobante</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pago of pagos">
+          <td>{{ pago.idUsuario }}</td>
+          <td>{{ pago.nombres }}</td>
+          <td>{{ pago.motivo }}</td>
+          <td>{{ pago.metodoPago }}</td>
+          <td>${{ pago.totalPagar?.toFixed(2) || pago.valor?.toFixed(2) || '0.00' }}</td>
+          <td>{{ pago.cuenta }}</td>
+          <td>{{ pago.fechaTransaccion | date: 'shortDate' }}</td>
+          <td>
+            <span class="badge rounded-pill"
+              [ngClass]="{
+                'bg-success': pago.estadoPago === 'Cancelado',
+                'bg-danger': pago.estadoPago === 'Rechazado',
+                'bg-secondary': !['Cancelado','Rechazado'].includes(pago.estadoPago || '')
+              }">
+              {{ pago.estadoPago === 'Cancelado' ? 'Aprobado' : pago.estadoPago === 'Rechazado' ? 'Rechazado' : pago.estadoPago || 'Desconocido' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-outline-primary btn-sm btn-icon" (click)="descargarComprobante(pago.idPago)" title="Descargar comprobante">
+              <i class="bi bi-download"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!cargando && pagos.length === 0" class="alert alert-info">
+    No hay pagos procesados.
+  </div>
+</div>

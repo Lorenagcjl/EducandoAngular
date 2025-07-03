@@ -1,0 +1,22 @@
+.list-group-item.active {
+  background-color: #a0cbf8;
+  color: white;
+  border-color: #007bff;
+}
+
+.card-header {
+  font-size: 1.1rem;
+}
+.collapsible {
+  max-height: 500px; /* ajusta según tu lista, un valor alto para mostrar */
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.collapsible.collapsed {
+  max-height: 0;
+  transition: max-height 0.4s ease;
+  /* opcional: para que no tome espacio */
+  padding: 0;
+  margin: 0;
+}

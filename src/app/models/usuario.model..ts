@@ -8,6 +8,8 @@ export interface UsuarioReadDTO {
   rol: string;
   grupo: string;
   estado: boolean;
+  foto?: string; 
+  nombreCompleto?: string;
 }
 
 export interface UsuarioCreateDTO {

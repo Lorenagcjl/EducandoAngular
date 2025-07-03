@@ -1,0 +1,91 @@
+<div class="container mt-4">
+  <h3 class="mb-4">Mis Asistencias</h3>
+
+  <!-- Dropdown de meses -->
+  <div class="mb-3">
+    <label for="mesSelect" class="form-label">Selecciona un mes:</label>
+    <select
+      id="mesSelect"
+      class="form-select w-auto"
+      [(ngModel)]="mesSeleccionado"
+      (change)="calcularPorcentajeMensual()"
+    >
+      <option *ngFor="let mes of mesesDisponibles" [ngValue]="mes">
+        {{ mes.nombre }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Porcentaje de asistencia -->
+  <div class="mb-3 p-3 rounded border d-inline-block" style="min-width: 220px;" *ngIf="porcentajeMensual !== null">
+    <strong>Porcentaje de asistencia en {{ mesSeleccionado?.nombre }}:</strong>
+    <span
+    class="fw-bold fs-4"
+      [ngClass]="{
+        'text-success': porcentajeMensual >= 90,
+        'text-warning': porcentajeMensual >= 70 && porcentajeMensual < 90,
+        'text-danger': porcentajeMensual < 70
+      }"
+    >
+      {{ porcentajeMensual }}%
+    </span>
+  </div>
+
+  <!-- Tabla de asistencias -->
+  <div style="overflow-x: auto;">
+    <table
+      class="table table-bordered text-center align-middle"
+      style="min-width: 600px;"
+    >
+      <thead class="table-primary">
+        <tr>
+          <th
+            style="position: sticky; left: 0; background-color: #cfe2ff; z-index: 3; min-width: 150px;"
+          >
+            Estado
+          </th>
+          <th *ngFor="let evento of eventosFiltrados">
+            {{ evento.nombreEvento }}<br />
+            <small>{{ evento.fechaEvento | date: 'dd/MM/yyyy' }}</small>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            style="position: sticky; left: 0; background-color: #e7f1ff; font-weight: bold; z-index: 2; min-width: 150px;"
+          >
+            Estado
+          </td>
+          <td *ngFor="let evento of eventosFiltrados">
+            <span
+              class="fw-bold text-decoration-none"
+              [ngClass]="{
+                'text-success': normalizeEstado(getEstado(evento.idEvento)) === 'presente',
+                'text-danger': normalizeEstado(getEstado(evento.idEvento)) === 'ausente',
+                'text-warning': normalizeEstado(getEstado(evento.idEvento)) === 'justificado',
+                'text-muted': !getEstado(evento.idEvento)
+              }"
+            >
+              <i
+                [ngClass]="{
+                  'bi bi-check-circle-fill me-1 text-success': normalizeEstado(getEstado(evento.idEvento)) === 'presente',
+                  'bi bi-x-circle-fill me-1 text-danger': normalizeEstado(getEstado(evento.idEvento)) === 'ausente',
+                  'bi bi-exclamation-triangle-fill me-1 text-warning': normalizeEstado(getEstado(evento.idEvento)) === 'justificado',
+                  'bi bi-dash-circle me-1 text-secondary': !getEstado(evento.idEvento)
+                }"
+              ></i>
+              {{ obtenerTextoEstado(getEstado(evento.idEvento)) }}
+            </span>
+          </td>
+        </tr>
+        <tr *ngIf="eventosFiltrados.length === 0">
+  <td colspan="100%" class="text-center text-muted py-4">
+    <i class="bi bi-calendar-x fs-4 me-2"></i>
+    No hay eventos en el mes seleccionado.
+  </td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+</div>

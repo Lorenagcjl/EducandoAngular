@@ -1,0 +1,23 @@
+<div class="container mt-3">
+  <h3 class="mb-4 fw-bold d-flex align-items-center text-primary">
+    <i class="bi bi-inbox me-2"></i> Gestión de Solicitudes
+  </h3>
+
+  <ul class="nav nav-tabs nav-tabs-custom mb-3">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'pendientes'" (click)="activeTab = 'pendientes'" href="javascript:void(0)">
+        <i class="bi bi-hourglass-split me-1"></i> Solicitudes Pendientes
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'procesadas'" (click)="activeTab = 'procesadas'" href="javascript:void(0)">
+        <i class="bi bi-check2-circle me-1"></i> Solicitudes Procesadas
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content-animated" [ngSwitch]="activeTab">
+    <app-solicitudes-pendientes *ngSwitchCase="'pendientes'"></app-solicitudes-pendientes>
+    <app-solicitudes-procesadas *ngSwitchCase="'procesadas'"></app-solicitudes-procesadas>
+  </div>
+</div>

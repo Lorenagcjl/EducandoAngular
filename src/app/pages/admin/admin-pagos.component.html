@@ -1,0 +1,35 @@
+<div class="container mt-3">
+  <h3 class="mb-4 fw-bold d-flex align-items-center text-primary">
+    <i class="bi bi-cash-stack me-2"></i> Gestión de Pagos
+  </h3>
+
+  <ul class="nav nav-tabs nav-tabs-custom mb-3">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'pendientes'" (click)="activeTab = 'pendientes'" href="javascript:void(0)">
+        <i class="bi bi-hourglass-split me-1"></i> Pagos Pendientes
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'procesados'" (click)="activeTab = 'procesados'" href="javascript:void(0)">
+        <i class="bi bi-list-check me-1"></i> Pagos Procesados
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'generar'" (click)="activeTab = 'generar'" href="javascript:void(0)">
+        <i class="bi bi-plus-circle me-1"></i> Generar Rubros
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'reporte-grupo'" (click)="activeTab = 'reporte-grupo'" href="javascript:void(0)">
+        <i class="bi bi-file-earmark-bar-graph me-1"></i> Reporte Grupo
+      </a>
+    </li>
+  </ul>
+
+  <div class="tab-content-animated" [ngSwitch]="activeTab">
+    <app-admin-pagos-pendientes *ngSwitchCase="'pendientes'"></app-admin-pagos-pendientes>
+    <app-admin-pagos-procesados *ngSwitchCase="'procesados'"></app-admin-pagos-procesados>
+    <app-admin-generar-rubros *ngSwitchCase="'generar'"></app-admin-generar-rubros>
+    <app-admin-reportes-pagos *ngSwitchCase="'reporte-grupo'"></app-admin-reportes-pagos>
+  </div>
+</div>

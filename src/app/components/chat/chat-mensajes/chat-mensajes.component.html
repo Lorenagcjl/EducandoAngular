@@ -1,0 +1,43 @@
+<!-- ENCABEZADO DEL CHAT -->
+<div class="chat-header">
+  <img [src]="obtenerFotoUsuario()" alt="Foto de usuario" class="foto-usuario" />
+  <h5 class="mb-0">{{ usuario.nombres }} {{ usuario.apellidos }}</h5>
+</div>
+
+
+<!-- CONTENEDOR DE MENSAJES -->
+<div class="chat-container" #chatContainer>
+  <div *ngFor="let mensaje of mensajes"
+       [ngClass]="{'mensaje-mio': esMio(mensaje), 'mensaje-otro': !esMio(mensaje)}"
+       class="mensaje-item"
+       (click)="seleccionarMensaje(mensaje.idMensaje)">
+
+    <!-- Vista normal del mensaje -->
+    <div class="mensaje-contenido" *ngIf="editandoMensajeId !== mensaje.idMensaje">
+      <p>{{ mensaje.contenido }}</p>
+      <small class="fecha">{{ mensaje.fechaEnvio | date: 'shortTime' }}</small>
+
+      <div *ngIf="esMio(mensaje) && mensajeSeleccionadoId === mensaje.idMensaje" class="acciones">
+        <button type="button" *ngIf="puedeEditar(mensaje)" (click)="comenzarEdicion(mensaje); $event.stopPropagation()" title="Editar">
+          ✏️
+        </button>
+        <button type="button" (click)="confirmarEliminar(mensaje.idMensaje); $event.stopPropagation()" title="Eliminar">
+          🗑️
+        </button>
+      </div>
+    </div>
+
+    <!-- Vista de edición -->
+    <div *ngIf="editandoMensajeId === mensaje.idMensaje" class="editar-mensaje" (click)="$event.stopPropagation()">
+      <input [(ngModel)]="mensajeEditadoTexto" />
+      <button type="button" (click)="guardarEdicion(mensaje)" title="Guardar">💾</button>
+      <button type="button" (click)="cancelarEdicion()" title="Cancelar">❌</button>
+    </div>
+  </div>
+</div>
+
+<!-- INPUT PARA NUEVO MENSAJE -->
+<div class="input-container">
+  <input type="text" placeholder="Escribe tu mensaje..." [(ngModel)]="nuevoMensaje" (keyup.enter)="enviarMensaje()" />
+  <button type="button" (click)="enviarMensaje()" [disabled]="!nuevoMensaje.trim()">Enviar</button>
+</div>

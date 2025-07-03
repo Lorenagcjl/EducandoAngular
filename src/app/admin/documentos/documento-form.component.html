@@ -1,0 +1,122 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" *ngIf="modalVisible" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content shadow-lg">
+      <form (ngSubmit)="submit(form)" #form="ngForm" novalidate>
+
+        <!-- Header -->
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            <i class="bi bi-file-earmark-plus-fill me-2"></i> Crear Documento
+          </h5>
+          <button type="button" class="btn-close btn-close-white" (click)="cerrar()" aria-label="Cerrar"></button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+          <!-- Error general -->
+          <div *ngIf="errorMensaje" class="alert alert-danger">
+            {{ errorMensaje }}
+          </div>
+
+          <!-- Título -->
+          <div class="mb-3">
+            <label for="titulo" class="form-label fw-semibold">Título <span class="text-danger">*</span></label>
+            <input
+              type="text"
+              id="titulo"
+              name="Titulo"
+              class="form-control"
+              [(ngModel)]="modelo.titulo"
+              required
+              #titulo="ngModel"
+              [ngClass]="{ 'is-invalid': titulo.invalid && titulo.touched }"
+              placeholder="Ej: Justificación de asistencias" />
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Descripción -->
+          <div class="mb-3">
+            <label for="descripcion" class="form-label fw-semibold">Descripción <span class="text-danger">*</span></label>
+            <textarea
+              id="descripcion"
+              name="Descripcion"
+              class="form-control"
+              [(ngModel)]="modelo.descripcion"
+              required
+              #descripcion="ngModel"
+              [ngClass]="{ 'is-invalid': descripcion.invalid && descripcion.touched }"
+              placeholder="Ej: Documento de respaldo"></textarea>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Tipo de Documento -->
+          <div class="mb-3">
+            <label for="tipo" class="form-label fw-semibold">Tipo de Documento <span class="text-danger">*</span></label>
+            <select
+              id="tipo"
+              name="IdTipoDocumento"
+              class="form-select"
+              [(ngModel)]="modelo.idTipoDocumento"
+              required
+              #tipo="ngModel"
+              [ngClass]="{ 'is-invalid': tipo.invalid && tipo.touched }">
+              <option value="0" disabled>Seleccione tipo</option>
+              <option *ngFor="let t of tiposDocumento" [value]="t.id">{{ t.nombre }}</option>
+            </select>
+            <div class="invalid-feedback">Este campo es obligatorio.</div>
+          </div>
+
+          <!-- Archivo -->
+          <div class="mb-3">
+            <label for="archivo" class="form-label fw-semibold">Archivo (.pdf o .docx) <span class="text-danger">*</span></label>
+            <input
+              type="file"
+              id="archivo"
+              name="archivo"
+              class="form-control"
+              accept=".pdf,.docx"
+              (change)="onFileSelected($event)"
+              required
+              [class.is-invalid]="(archivoInvalido || (!modelo.archivo && form.submitted))"
+            />
+            <div class="form-text">Solo se permiten archivos PDF o DOCX (máximo 5MB).</div>
+
+            <!-- Error si el archivo no cumple validación -->
+            <div *ngIf="archivoInvalido" class="text-danger small mt-1">
+              {{ mensajeArchivoInvalido }}
+            </div>
+
+            <!-- Error si el campo está vacío y se intentó enviar el formulario -->
+            <div *ngIf="!modelo.archivo && form.submitted && !archivoInvalido" class="text-danger small mt-1">
+              Este campo es obligatorio.
+            </div>
+
+            <!-- Vista previa del archivo si existe y es válido -->
+            <div *ngIf="modelo.archivo && !archivoInvalido" class="mt-3 alert alert-secondary d-flex justify-content-between align-items-center">
+              <div>
+                <i class="bi bi-file-earmark-fill text-primary me-1"></i>
+                <strong>{{ modelo.archivo.name }}</strong>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="quitarArchivo()">
+                <i class="bi bi-x-circle-fill"></i> Quitar
+              </button>
+            </div>
+          </div>
+        </div> <!-- ✅ Cierre correcto del modal-body -->
+
+        <!-- Footer -->
+        <div class="modal-footer">
+  <button type="submit" class="btn btn-success" [disabled]="cargando" aria-label="Guardar">
+    <i class="bi bi-check-circle"></i>
+  </button>
+  <button type="button" class="btn btn-outline-secondary" (click)="cerrar()" aria-label="Cancelar">
+    <i class="bi bi-x-circle"></i>
+  </button>
+</div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="modalVisible"></div>

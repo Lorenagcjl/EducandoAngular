@@ -1,0 +1,32 @@
+
+<form (ngSubmit)="generarRubros()" class="p-4 rounded shadow bg-white" style="max-width: 500px;">
+  <div class="mb-3">
+    <label class="form-label fw-semibold">Año</label>
+    <input
+      type="number"
+      class="form-control"
+      [(ngModel)]="anio"
+      name="anio"
+      required
+      min="2000"
+      placeholder="Ej. 2025"
+    />
+  </div>
+
+  <div class="mb-4">
+    <label class="form-label fw-semibold">Mes de Inicio</label>
+    <select
+      class="form-select"
+      [(ngModel)]="mesInicio"
+      name="mesInicio"
+      required
+    >
+      <option [ngValue]="1">Enero</option>
+      <option [ngValue]="7">Julio</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-success w-50 fw-bold">
+    <i class="bi bi-gear-fill me-2"></i> Generar Rubros
+  </button>
+</form>

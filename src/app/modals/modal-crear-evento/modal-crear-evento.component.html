@@ -1,55 +1,90 @@
-<div class="modal-header">
-  <h5 class="modal-title">Crear Evento</h5>
-  <button type="button" class="btn-close" (click)="activeModal.dismiss()"></button>
+<div class="modal-header bg-primary text-white">
+  <h5 class="modal-title d-flex align-items-center">
+    <i class="bi bi-calendar-plus me-2"></i> Crear Evento
+  </h5>
+  <button type="button" class="btn-close btn-close-white" (click)="activeModal.dismiss()" aria-label="Cerrar"></button>
 </div>
 
-<div class="modal-body">
-  <form [formGroup]="eventoForm" (ngSubmit)="guardar()">
-    <div class="mb-3">
-      <label>Nombre</label>
-      <input type="text" class="form-control" formControlName="nombreEvento" maxlength="100">
-      <div *ngIf="f['nombreEvento'].invalid && enviado" class="text-danger">
-        El nombre es obligatorio (máx. 100 caracteres).
+<div class="modal-body bg-light">
+  <form [formGroup]="eventoForm" (ngSubmit)="guardar()" novalidate>
+    <div class="row g-3">
+
+      <!-- NOMBRE -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Nombre <span class="text-danger">*</span>
+        </label>
+        <input type="text" class="form-control"
+               formControlName="nombreEvento"
+               maxlength="100"
+               [ngClass]="{'is-invalid': f['nombreEvento'].invalid && (f['nombreEvento'].touched || f['nombreEvento'].dirty)}">
+        <div class="invalid-feedback">
+          El nombre es obligatorio (máx. 100 caracteres).
+        </div>
+      </div>
+
+      <!-- FECHA -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Fecha <span class="text-danger">*</span>
+        </label>
+        <input type="date" class="form-control"
+               formControlName="fechaEvento"
+               [ngClass]="{'is-invalid': f['fechaEvento'].invalid && (f['fechaEvento'].touched || f['fechaEvento'].dirty)}">
+        <div class="invalid-feedback">
+          La fecha es requerida y no puede ser pasada.
+        </div>
+      </div>
+
+      <!-- HORA INICIO -->
+      <div class="col-md-6">
+        <label class="form-label">
+          Hora Inicio <span class="text-danger">*</span>
+        </label>
+        <input type="time" class="form-control"
+               formControlName="inicioEvento"
+               [ngClass]="{'is-invalid': f['inicioEvento'].invalid && (f['inicioEvento'].touched || f['inicioEvento'].dirty)}">
+        <div *ngIf="f['inicioEvento'].invalid && (f['inicioEvento'].touched || f['inicioEvento'].dirty)" class="invalid-feedback">
+          La hora es requerida.
+        </div>
+      </div>
+
+      <!-- HORA FIN -->
+      <div class="col-md-6">
+        <label class="form-label">Hora Fin</label>
+        <input type="time" class="form-control" formControlName="finEvento">
+      </div>
+
+      <!-- LUGAR -->
+      <div class="col-12">
+        <label class="form-label">Lugar</label>
+        <input type="text" class="form-control" formControlName="lugar" maxlength="150">
+      </div>
+
+      <!-- DESCRIPCIÓN -->
+      <div class="col-12">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" formControlName="descripcion"></textarea>
+      </div>
+
+      <!-- MENSAJE DE ERROR GENERAL -->
+      <div class="col-12">
+        <div class="alert alert-danger py-2" *ngIf="error">{{ error }}</div>
       </div>
     </div>
 
-    <div class="mb-3">
-      <label>Descripción</label>
-      <textarea class="form-control" formControlName="descripcion"></textarea>
-      <!-- Ya no es obligatorio, por eso no hay mensaje de error -->
-    </div>
+    <!-- BOTONES -->
+    <div class="modal-footer border-0 mt-4">
+      
 
-    <div class="mb-3">
-      <label>Fecha</label>
-      <input type="date" class="form-control" formControlName="fechaEvento">
-      <div *ngIf="f['fechaEvento'].invalid && enviado" class="text-danger">
-        Fecha inválida o pasada.
-      </div>
-    </div>
-
-    <div class="mb-3">
-      <label>Hora Inicio</label>
-      <input type="time" class="form-control" formControlName="inicioEvento">
-      <!-- Campo opcional: no se muestra mensaje de error -->
-    </div>
-
-    <div class="mb-3">
-      <label>Hora Fin</label>
-      <input type="time" class="form-control" formControlName="finEvento">
-      <!-- Campo opcional: no se muestra mensaje de error -->
-    </div>
-
-    <div class="mb-3">
-      <label>Lugar</label>
-      <input type="text" class="form-control" formControlName="lugar" maxlength="150">
-      <!-- Campo opcional: no se muestra mensaje de error -->
-    </div>
-
-    <div class="text-danger" *ngIf="error">{{ error }}</div>
-
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss()">Cancelar</button>
-      <button type="submit" class="btn btn-primary">Crear</button>
+      <button type="submit" class="btn btn-primary"
+              [disabled]="eventoForm.invalid" title="Crear evento">
+        <i class="bi bi-check-circle"></i>
+      </button>
+      <button type="button" class="btn btn-outline-secondary"
+              (click)="activeModal.dismiss()" title="Cancelar">
+        <i class="bi bi-x-circle"></i>
+      </button>
     </div>
   </form>
 </div>

@@ -1,8 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { NotificacionesService } from '../services/notificaciones.service';
+import { Subscription, interval } from 'rxjs';
+import { HostListener } from '@angular/core';
+import { MensajeService } from '../services/mensaje.service';
+import { UsuarioService } from '../services/usuario.service';
 
+interface Notificacion {
+  idNotificacionUsuario: number;
+  titulo: string;
+  contenido: string;
+  leido: boolean;
+  fechaNotificacion: string;
+}
 @Component({ 
   selector: 'app-dashboard-admin',
   standalone: true,
@@ -10,23 +22,37 @@ import { AuthService } from '../auth/auth.service';
   templateUrl: './dashboard-admin.component.html',
   styleUrls: ['./dashboard-admin.component.css']
 })
-export class DashboardAdminComponent implements OnInit {
+export class DashboardAdminComponent implements OnInit, OnDestroy {
   nombreUsuario = 'Administrador';  // valor por defecto
   fotoPerfil: string | null = null;  // podrías poner una url default si quieres
   notificacionesCount = 0;
+  notificaciones: Notificacion[] = [];
+mostrarDropdown = false;
   sidebarCollapsed = false;
+  private subscripcionConteoNotificaciones?: Subscription;
+  private subscripcionCantidadNoLeidos?: Subscription;
+   private subscripcionRouter?: Subscription;
+  cantidadNoLeidos = 0;
+  rutaPerfil: string = '/admin/perfil';
+  mostrarCarrusel = false;
 
   menuItems = [
     { label: 'Usuarios', icon: 'fas fa-fw fa-users', route: 'usuarios' },
     { label: 'Eventos', icon: 'fas fa-fw fa-calendar-alt', route: 'eventos' },
-    { label: 'Finanzas', icon: 'fas fa-fw fa-school', route: 'pagos' },
-    { label: 'Asistencias', icon: 'fas fa-fw fa-school', route: 'asistencias' },
-    { label: 'Inscripciones', icon: 'fas fa-fw fa-file-alt', route: 'inscripciones' },
-    { label: 'Solicitudes', icon: 'fas fa-fw fa-school', route: 'solicitudes' },
+    { label: 'Finanzas', icon: 'fas fa-fw fa-coins', route: 'pagos' },
+    //{ label: 'Asistencias', icon: 'fas fa-fw fa-user-check', route: 'asistencias' },
+    { label: 'Inscripciones', icon: 'fas fa-fw fa-clipboard-list', route: 'inscripciones' },
+    { label: 'Solicitudes', icon: 'fas fa-fw fa-envelope-open-text', route: 'solicitudes' },
     { label: 'Documentos', icon: 'fas fa-fw fa-file-alt', route: 'documentos' },
   ];
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private notificacionesService: NotificacionesService,
+    private mensajeService: MensajeService,
+    private usuarioService: UsuarioService
+  ) {}
 
   ngOnInit(): void {
     // Intentamos extraer info del token decodificado
@@ -35,10 +61,125 @@ export class DashboardAdminComponent implements OnInit {
       const payload = this.decodeToken(token);
       this.nombreUsuario = payload?.nombreCompleto || 'Administrador';
       this.fotoPerfil = payload?.fotoPerfilUrl || null;
-      this.notificacionesCount = 0; // Aquí puedes llamar a un método real para obtener notificaciones si existe
     }
+    this.cargarConteoNotificaciones();
+// Obtener perfil real desde backend
+    this.usuarioService.perfil$.subscribe(perfil => {
+  if (perfil) {
+    this.nombreUsuario = `${perfil.nombres || ''} ${perfil.apellidos || ''}`.trim();
+    this.fotoPerfil = perfil.foto || null;
+  }
+});
+this.usuarioService.refrescarPerfil(); // Carga inicial
+
+    /// Refrescar cada 30 segundos
+    this.subscripcionConteoNotificaciones = interval(30000).subscribe(() => {
+      this.cargarConteoNotificaciones();
+    });
+
+    this.subscripcionCantidadNoLeidos = interval(30000).subscribe(() => {
+      this.cargarCantidadNoLeidos();
+    });
+    //mostrar carrusel
+  this.mostrarCarrusel = this.router.url === '/admin';
+
+  this.subscripcionRouter = this.router.events.subscribe(event => {
+    if (event instanceof NavigationEnd) {
+      this.mostrarCarrusel = event.urlAfterRedirects === '/admin';
+    }
+  });
   }
 
+  cargarCantidadNoLeidos(): void {
+    this.mensajeService.obtenerCantidadNoLeidos().subscribe({
+      next: cantidad => this.cantidadNoLeidos = cantidad,
+      error: err => console.error('Error al cargar mensajes no leídos', err)
+    });
+  }
+  ngOnDestroy(): void {
+    this.subscripcionConteoNotificaciones?.unsubscribe();
+    this.subscripcionCantidadNoLeidos?.unsubscribe();
+    this.subscripcionRouter?.unsubscribe();
+  }
+  private cargarConteoNotificaciones(): void {
+    this.notificacionesService.obtenerConteoNoLeidas().subscribe({
+      next: (count) => {
+        console.log('Conteo recibido:', count);
+        this.notificacionesCount = count;
+      },
+      error: (err) => {
+        console.error('Error al obtener notificaciones', err);
+      }
+    });
+  }
+  toggleDropdown(event: Event) {
+    event.stopPropagation();
+  this.mostrarDropdown = !this.mostrarDropdown;
+
+  if (this.mostrarDropdown) {
+    this.cargarNotificaciones(); // Cargar al abrir
+  }
+}
+
+cargarNotificaciones(): void {
+  this.notificacionesService.obtenerNotificaciones().subscribe({
+    next: (data) => { // <-- aquí
+      this.notificaciones = data;
+    },
+    error: (err) => {
+      console.error('Error al cargar notificaciones', err);
+    }
+  });
+}
+marcarTodasComoLeidas(): void {
+  this.notificacionesService.marcarTodasComoLeidas().subscribe({
+    next: () => {
+      this.cargarNotificaciones();
+      this.cargarConteoNotificaciones();
+    },
+    error: err => console.error('Error al marcar todas como leídas', err)
+  });
+}
+
+irADetalle(notificacion: Notificacion): void {
+  const titulo = notificacion.titulo.toLowerCase();
+
+  // Marcar como leída
+  this.notificacionesService.marcarComoLeido(notificacion.idNotificacionUsuario).subscribe({
+    complete: () => {
+      this.cargarConteoNotificaciones(); // Actualiza el badge
+    }
+  });
+ let ruta: string | null = null;
+    // Lógica para detectar el módulo destino
+  if (this.contienePalabraClave(titulo, ['evento'])) {
+    ruta = '/admin/eventos';
+  } else if (this.contienePalabraClave(titulo, ['pago'])) {
+    ruta = '/admin/pagos';
+  } else if (this.contienePalabraClave(titulo, ['solicitud'])) {
+    ruta = '/admin/solicitudes';
+  }
+
+  if (ruta) {
+    this.router.navigateByUrl(ruta);
+  } else {
+    alert('No se pudo determinar a qué módulo pertenece esta notificación.');
+  }
+
+  this.mostrarDropdown = false;
+}
+
+private contienePalabraClave(texto: string, claves: string[]): boolean {
+  return claves.some(palabra => texto.includes(palabra));
+}
+@HostListener('document:click', ['$event'])
+  clickFuera(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const dropdown = document.getElementById('alertsDropdown');
+    if (dropdown && !dropdown.contains(target)) {
+      this.mostrarDropdown = false;
+    }
+  }
   toggleSidebar() {
     const body = document.body;
     body.classList.toggle('sidebar-toggled');
@@ -50,7 +191,6 @@ export class DashboardAdminComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
 
   scrollToTop() {
@@ -65,4 +205,9 @@ export class DashboardAdminComponent implements OnInit {
       return {};
     }
   }
+  onImageError(event: Event) {
+  const imgElement = event.target as HTMLImageElement;
+  imgElement.src = 'assets/img/undraw_profile.svg'; // fallback
+}
+
 }

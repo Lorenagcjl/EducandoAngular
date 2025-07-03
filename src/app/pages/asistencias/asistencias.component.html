@@ -1,0 +1,69 @@
+<div class="container mt-4">
+
+  <div class="mb-3">
+    <label for="selectEvento" class="form-label fw-bold">Seleccionar Evento:</label>
+    <select
+      id="selectEvento"
+      class="form-select shadow-sm"
+      [(ngModel)]="eventoSeleccionado"
+      (change)="cargarAsistencias()">
+      <option *ngFor="let ev of eventos" [ngValue]="ev.idEvento">
+        {{ ev.nombreEvento }} - {{ ev.fechaEvento | date }}
+        <span *ngIf="!ev.estado">(Finalizado)</span>
+      </option>
+    </select>
+  </div>
+
+  <div *ngIf="bloquearAsistenciaPorFecha" class="alert alert-warning text-center">
+    Los pagos inician en julio. No se puede registrar asistencia para eventos anteriores.
+  </div>
+
+  <div class="table-responsive" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th>Foto</th>
+          <th>Nombre Completo</th>
+          <th>Cédula</th>
+          <th>Estado de Asistencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let integrante of integrantes">
+          <td>
+  <img
+    [src]="integrante.foto && integrante.foto.trim() !== '' ? integrante.foto : '/img/usuario-default.png'"
+    alt="Foto de {{ integrante.nombreCompleto }}"
+    class="rounded-circle border"
+    style="width: 50px; height: 50px; object-fit: cover;">
+</td>
+
+          <td>
+            {{ integrante.nombreCompleto }}
+            <span *ngIf="!integrante.tienePagoAprobado" class="badge bg-danger ms-2">Con deuda</span>
+          </td>
+          <td>{{ integrante.cedula }}</td>
+          <td>
+            <select
+              class="form-select form-select-sm shadow-sm"
+              [(ngModel)]="asistenciasMap[integrante.idUsuario]"
+              [disabled]="!integrante.tienePagoAprobado || !asistenciaPermitida">
+              <option value="">Sin marcar</option>
+              <option value="Presente">Presente</option>
+              <option value="Ausente">Ausente</option>
+              <option value="Justificado">Justificado</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!asistenciaPermitida" class="alert alert-warning text-center mt-3">
+    La asistencia solo puede registrarse desde el día del evento hasta el fin del mes.
+  </div>
+
+  <div class="text-end mt-3">
+    <button class="btn btn-primary shadow" (click)="guardarAsistencias()">Guardar Asistencias</button>
+  </div>
+</div>

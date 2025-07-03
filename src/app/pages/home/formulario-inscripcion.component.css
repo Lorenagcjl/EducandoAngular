@@ -1,0 +1,13 @@
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border-color: #dc3545;
+}
+
+label {
+  font-weight: 600;
+}
+input, textarea {
+  text-transform: uppercase;
+}
+

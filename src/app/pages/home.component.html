@@ -1,0 +1,277 @@
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary fixed-top shadow">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+      <img src="/img/logo.png" alt="Logo" width="120" height="40" class="me-2 rounded" />
+      <span class="brand-text">Educando Ecuador</span>
+    </a>
+    <button
+      class="navbar-toggler border-0"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#sobre-nosotros">Sobre Nosotros</a></li>
+        <li class="nav-item"><a class="nav-link text-white fw-semibold" href="#contacto">Contáctanos</a></li>
+        <li class="nav-item">
+          <a class="btn btn-light ms-3 fw-bold shadow-sm px-4 py-2 rounded-pill" (click)="irAlLogin()">Iniciar Sesión</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION con letras flotando con CSS puro -->
+<section class="hero-section text-white d-flex align-items-center justify-content-center text-center">
+  <video autoplay muted loop playsinline preload="auto" class="hero-video">
+    <source src="/videos/Download.mp4" type="video/mp4">
+    Tu navegador no soporta video en HTML5.
+  </video>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="display-3 fw-bold mb-4 fade-in-down">Bienvenido a Educando Ecuador</h1>
+    <p class="lead fade-in-up">Somos una institución, que nace de una esperanza y crece por una pasión y se fortalece en nuestro corazón.</p>
+    <p>Elegancia, Experiencia y Calidad</p>
+  </div>
+</section>
+
+<!-- SOBRE NOSOTROS -->
+<section id="sobre-nosotros" class="about-section text-white py-5" >
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold section-title text-dark">Sobre Nosotros</h2>
+    <div class="grid-container">
+      <div class="card">
+        <div class="title">MISIÓN</div>
+        <div class="icon"><i class="fa-solid fa-people-group"></i></div>
+        <div class="content">
+          <p>Fomentar la unión, la disciplina y el amor por el arte en niños y jóvenes ecuatorianos a través de la música y el bastoneo, integrando estudiantes de distintas instituciones en un espacio que promueve la cultura, el trabajo en equipo y la excelencia artística.</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="title">VISIÓN</div>
+        <div class="icon"><i class="fa-solid fa-globe"></i></div>
+        <div class="content">
+          <p>Ser un referente nacional e internacional en la formación artística de bandas y bastoneras, reconocidos por nuestra trayectoria, calidad y compromiso con el desarrollo integral de nuestros integrantes, llevando el talento ecuatoriano a escenarios dentro y fuera del país.</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="title">VALORES</div>
+        <div class="icon"><i class="fa-solid fa-drum"></i></div>
+        <div class="content">
+          <p>Disciplina, pasión, respeto, compromiso, compañerismo y amor por el arte. Estos valores son el corazón de Educando Ecuador y guían cada paso de nuestros miembros para crecer como artistas y como seres humanos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="separador"></div>
+<!-- SECCIÓN MULTIMEDIA: FOTOS Y VIDEOS -->
+<section id="galeria" class="gallery-section py-5  text-white">
+  <div class="container">
+    <h2 class="text-center mb-5 fw-bold section-title text-dark">Noticias</h2>
+    <div class="cards">
+
+      <!-- Card 1 -->
+      <input type="radio" id="radio-1" name="radio-card" checked>
+      <article class="card" style="--angle:4deg">
+        <img class="card-img" src="/img/convocatoriaa.jpg">
+        <div class="card-data">
+          <span class="card-num">1/7</span>
+  <h2>¡Convocatoria: Únete al Team Educando Ecuador!</h2>
+  <p >¿Eres un apasionado de las <strong>BASTONERAS, CACHIPORREROS, COLOR GUARD o la BANDA</strong>? ¿Sueñas con representar a Ecuador en escenarios nacionales e internacionales? ¡Esta es tu oportunidad única de brillar!</p>
+
+  <p>El Team Educando Ecuador, con <strong>aval internacional WAMSB</strong>, está buscando a los mejores para unirse a nuestras filas. Si tienes disciplina, ritmo y compromiso para llevar nuestra cultura y arte más allá de las fronteras, <strong>¡te estamos esperando!</strong></p>
+
+  <p class="text-danger fw-bold">¡Los cupos son limitados! No te quedes fuera de esta experiencia inolvidable. ¡Tú lo pediste, ahora es el momento de demostrar tu arte!</p>
+
+  <a class="btn btn-primary fw-semibold mt-2" href="#inscripcion">Inscríbete Ahora</a>
+          <footer>
+            <label for="radio-7" aria-label="Previous">&#10094;</label>
+            <label for="radio-2" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <input type="radio" id="radio-2" name="radio-card">
+      <article class="card" style="--angle:-8deg">
+        <img class="card-img" src="/img/beca.jpg">
+        <div class="card-data">
+          <span class="card-num">2/7</span>
+          <h2>¡Gana una Beca!</h2>
+          <p>¡GANA UNA BECA DE INGLÉS CON NOVA ENGLISH ACADEMY! 🇬🇧</p>
+<p>Gracias al auspicio de Nova English Academy y el proyecto Educando Ecuador, puedes acceder a una beca para aprender inglés con certificación internacional Cambridge. 🏅✨</p>
+<ul>
+  <li>✅ Todos los niveles: A1, A2, B1, B2, C1</li>
+  <li>📍 Certificado por el Ministerio del Trabajo</li>
+  <li>📚 Prepárate para TOEFL o IELTS</li>
+</ul>
+<p>
+🎺 Esta es tu oportunidad:
+El Team Educando Ecuador, con aval internacional de WAMSB, busca a los mejores talentos.
+Si tienes disciplina, ritmo y compromiso, ¡queremos verte brillar!</p>
+          <footer>
+            <label for="radio-1" aria-label="Previous">&#10094;</label>
+            <label for="radio-3" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <input type="radio" id="radio-3" name="radio-card">
+      <article class="card" style="--angle:-7deg">
+        <img class="card-img" src="/img/bandac.jpg">
+        <div class="card-data">
+          <span class="card-num">3/7</span>
+          <h2>¡Primer Concurso de Bandas!</h2>
+          <p>Educando Ecuador Internacional presente en el 1er Festival Calderón con Estirpe de Gloria.</p>
+          <p>Celebramos la identidad, la cultura y el talenti en la Unidad Educativa Municipal "Calderón".</p>
+          <p><strong>¡Juntos construimos educación con raíces y futuro!</strong></p>
+          <footer>
+            <label for="radio-2" aria-label="Previous">&#10094;</label>
+            <label for="radio-4" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <input type="radio" id="radio-4" name="radio-card">
+      <article class="card" style="--angle:11deg">
+        <img class="card-img" src="/img/festival8.jpg">
+        <div class="card-data">
+          <span class="card-num">4/7</span>
+          <h2>¡Viva la Patria 2025!</h2>
+          <p>¡Este 24 de mayo celebramos la Gesta Libertaria de 1822 con ritmo y patriotismo! 🇪🇨🥁🎺</p> 
+          <p>Los invitamos al 8vo Festival Nacional de Bandas y Bastoneras Educando Ecuador "Viva La Patria".</p>
+          <p>Desde 2001, nuestros festivales se han institucionalizado con el aval de la Organización Internacional de Bandas OIB Latinoamérica, ¡proyectando nuestro talento al mundo! Únete a esta vibrante celebración de nuestra historia y cultura en donde la Confraternidad y Camaraderia es nuestro objetivo fundamental ¡Te esperamos!</p>
+          <footer>
+            <label for="radio-3" aria-label="Previous">&#10094;</label>
+            <label for="radio-5" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <input type="radio" id="radio-5" name="radio-card">
+      <article class="card" style="--angle:13deg">
+        <img class="card-img" src="/img/gira.jpg">
+        <div class="card-data">
+          <span class="card-num">5/7</span>
+          <h2>¡Gira Carnavalera!</h2>
+          <p>Este 2025 recorremos ✈️ el País 💃🥁💂‍♂️ en los Carnavales 🎉 Playeros 🏖 y en la Serranía 🏔 Ecuatoriana 🇪🇨, todos cordialmente invitados.</p> 
+          <footer>
+            <label for="radio-4" aria-label="Previous">&#10094;</label>
+            <label for="radio-6" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <input type="radio" id="radio-6" name="radio-card">
+      <article class="card" style="--angle:-17deg">
+        <img class="card-img" src="/img/mma.jpg">
+        <div class="card-data">
+          <span class="card-num">6/7</span>
+          <h2>¡Celebremos a Mamá!</h2>
+          <p>El amor de un hijo no tiene límites, ¡y lo demostraremos con arte! 💐</p>
+          <p>Educando Ecuador se enorgullece en celebrar el Día de las Madres con una emotiva presentación de bandas bastoneras y danzas, donde los verdaderos protagonistas son los hijos rindiendo tributo a sus maravillosas madres.</p>
+          <p>¡No te pierdas este espectáculo lleno de sentimiento!</p>
+          <footer>
+            <label for="radio-5" aria-label="Previous">&#10094;</label>
+            <label for="radio-7" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+      <!-- Card 7 -->
+      <input type="radio" id="radio-7" name="radio-card">
+      <article class="card" style="--angle:20deg">
+        <img class="card-img" src="/img/festival.jpg">
+        <div class="card-data">
+          <span class="card-num">7/7</span>
+          <h2>¡Viva Quito!</h2>
+          <p>Desde el Centro del Mundo, el Vigesimo Tercer Festival Internacional de Bandas y Bastoneras más grande y antiguo del Ecuador que reune a las mejores agrupaciones del Pais como Guayaquil, Duran, Naranjito, Manta, Chone, Jama, Latacunga, Quito e invitados especiales de Colombia 🇻🇪 y Guatemala 🇬🇹</p>
+           <p>Tu aporte será una funda de caramelos para dar una sonrisa a nuestros niños.</p>
+          <footer>
+            <label for="radio-6" aria-label="Previous">&#10094;</label>
+            <label for="radio-1" aria-label="Next">&#10095;</label>
+          </footer>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+<div class="separador"></div>
+<!-- FORMULARIO DE INSCRIPCIÓN -->
+<section class="container my-5 py-5" id="inscripcion">
+  <h2 class="text-center mb-5 fw-bold section-title">Formulario de Inscripción</h2>
+  <app-formulario-inscripcion></app-formulario-inscripcion>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer bg-gradient-footer text-white py-5">
+  <section id="contacto"></section>
+  <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
+
+    <!-- Redes sociales verticales -->
+    <div class="socials-container d-flex flex-column align-items-center align-items-md-start">
+      <h5 class="mb-4 fw-bold text-shadow">Síguenos en redes</h5>
+      <nav class="d-flex flex-column gap-3">
+        <a href="https://wa.me/593993000365" target="_blank" class="social-link">
+  <i class="bi bi-whatsapp fs-3"></i> WhatsApp
+</a>
+        <a href="https://facebook.com/educando.ecuador" target="_blank" class="social-link">
+          <i class="bi bi-facebook fs-3"></i> Facebook
+        </a>
+        <a href="https://instagram.com" target="_blank" class="social-link">
+          <i class="bi bi-instagram fs-3"></i> Instagram
+        </a>
+        <a href="https://www.tiktok.com/@team_educando.ecuador" target="_blank" class="social-link">
+          <i class="fab fa-tiktok fs-3"></i> TikTok
+        </a>
+      </nav>
+    </div>
+
+    <!-- Mapa Google Maps -->
+    <div class="map-container shadow-lg rounded" style="max-width: 800px; margin: auto;">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.283234564027!2d-78.5074646857738!3d-0.2187960990901746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91d59a2714c95dd3%3A0xcccd39e91640872f!2sPlaza%20Belmonte!5e0!3m2!1ses!2sec!4v1687795613200!5m2!1ses!2sec"
+    width="100%"
+    height="300"
+    style="border:0; border-radius: 15px;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    title="Ubicación Educando Ecuador"
+  ></iframe>
+</div>
+
+    <!-- Copyright -->
+    <div class="text-center text-md-end text-shadow" style="min-width: 180px;">
+      <p class="small mb-0 fs-6">&copy; 2025 Educando Ecuador</p>
+    </div>
+
+  </div>
+</footer>
+
+<script> 
+document.addEventListener("DOMContentLoaded", () => {
+  const video = document.querySelector(".hero-video");
+  if (video) {
+    video.load();
+    video.play().catch(err => {
+      console.log("Autoplay bloqueado:", err);
+      video.setAttribute("controls", "controls");
+    });
+  }
+});
+</script>

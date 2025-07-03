@@ -1,0 +1,35 @@
+<div class="container my-4">
+
+  <div *ngIf="integrantes.length > 0; else noIntegrantes">
+    <div class="table-responsive" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+      <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+        <thead class="table-primary position-sticky top-0">
+          <tr>
+            <th scope="col">Foto</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cédula</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Teléfono</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let integrante of integrantes">
+            <td>
+              <img [src]="integrante.foto || '/img/usuario-default.png'" alt="Foto de {{ integrante.nombreCompleto }}" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+            </td>
+            <td>{{ integrante.nombreCompleto }}</td>
+            <td>{{ integrante.cedula }}</td>
+            <td>{{ integrante.correo }}</td>
+            <td>{{ integrante.telefono }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <ng-template #noIntegrantes>
+    <div class="alert alert-warning text-center mt-3">
+      No se encontraron integrantes.
+    </div>
+  </ng-template>
+</div>

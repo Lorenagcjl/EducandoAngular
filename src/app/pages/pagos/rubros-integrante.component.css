@@ -1,0 +1,36 @@
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.alerta-pagos {
+    background-color: #fff3f3;
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    padding: 20px;
+    color: #d8000c;
+    font-size: 16px;
+    margin-top: 20px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+  }
+
+  .alerta-pagos li {
+    margin-bottom: 10px;
+    list-style-type: disc;
+    margin-left: 20px;
+  }
+
+  .alerta-pagos em {
+    font-style: italic;
+    text-decoration: underline;
+  }
+
+  /* Opción para que siempre esté visible en la parte superior */
+  .alerta-fija {
+    position: relative;
+    top: 0;
+    z-index: 1000;
+  }
+  input, textarea {
+  text-transform: uppercase;
+}
+

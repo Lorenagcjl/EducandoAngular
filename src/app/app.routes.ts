@@ -10,8 +10,23 @@ import { DashboardInstructorComponent } from './dashboard-instructor/dashboard-i
 import { DashboardIntegranteComponent } from './dashboard-integrante/dashboard-integrante.component';
 import { ActivarCuentaComponent } from './components/activar-cuenta/activar-cuenta.component';
 import { CalendarioEventosComponent } from './components/calendario-eventos.component';
+import { PagosComponent } from './pages/pagos/pagos.component';
+import { AdminPagosComponent } from './pages/admin/admin-pagos.component';
+import { AsistenciasContainerComponent } from './asistencias-container/asistencias-container.component';
+import { ResumenIntegranteComponent } from './resumen-integrante/resumen-integrante.component';
+import { AdminPeriodosComponent } from './admin-periodos/admin-periodos.component';
+import { InscripcionesComponent } from './pages/instructor/inscripciones.component';
+import { HomeComponent } from './pages/home.component';
+import { DocumentosComponent } from './admin/documentos.component';
+import { MisSolicitudesComponent } from './solicitudes/mis-solicitudes/mis-solicitudes.component';
+import { AdminSolicitudesComponent } from './pages/admin/admin-solicitudes/admin-solicitudes.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { PerfilUsuarioComponent } from './perfil-usuario.component';
 
 export const routes: Routes = [
+  { path: 'home', component: HomeComponent },
+
+
   { path: 'login', component: LoginComponent },
   { path: 'restablecer', component: ResetRequestComponent },
   { path: 'cambiar-contrasena', component: ResetPasswordComponent },
@@ -24,7 +39,12 @@ export const routes: Routes = [
     children: [
       { path: 'usuarios', component: UsuarioListComponent },
       { path: 'eventos', component: CalendarioEventosComponent },
-      // otras rutas hijas
+      { path: 'pagos', component: AdminPagosComponent },
+      { path: 'inscripciones', component: AdminPeriodosComponent },
+      { path: 'documentos', component: DocumentosComponent },
+      { path: 'solicitudes', component: AdminSolicitudesComponent },
+      { path: 'mensajes', component: ChatComponent },
+      { path: 'perfil', component: PerfilUsuarioComponent },
     ]
   },
   {
@@ -34,6 +54,12 @@ export const routes: Routes = [
     data: { role: 'Instructor' },
     children:[
       { path: 'eventos', component: CalendarioEventosComponent },
+      { path: 'asistencias', component: AsistenciasContainerComponent },
+      { path: 'inscripciones', component: InscripcionesComponent },
+      { path: 'documentos', component: DocumentosComponent },
+      { path: 'solicitudes', component: MisSolicitudesComponent},
+      { path: 'mensajes', component: ChatComponent },
+      { path: 'perfil', component: PerfilUsuarioComponent },
     ]
   },
   {
@@ -43,8 +69,17 @@ export const routes: Routes = [
     data: { role: 'Integrante' },
     children: [
       { path: 'eventos', component: CalendarioEventosComponent },
+      { path: 'pagos', component: PagosComponent },
+      { path: 'asistencias', component: ResumenIntegranteComponent},
+      { path: 'documentos', component: DocumentosComponent },
+      { path: 'solicitudes', component: MisSolicitudesComponent},
+      { path: 'mensajes', component: ChatComponent },
+      { path: 'perfil', component: PerfilUsuarioComponent },
     ]
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'login' }
+  // ✅ Redirige raíz a Home
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+
+  // ✅ Ruta comodín: si no coincide con nada, va a home
+  { path: '**', redirectTo: 'home' }
 ];

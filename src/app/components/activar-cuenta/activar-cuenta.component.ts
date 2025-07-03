@@ -33,7 +33,7 @@ export class ActivarCuentaComponent implements OnInit {
 
     this.solicitudesRegistroService.activarCuenta(token).subscribe({
       next: (res: any) => {
-        this.mensaje = res.mensaje || 'Cuenta activada correctamente.';
+        this.mensaje = res.mensaje || 'Cuenta activada correctamente. Por favor revisa tu correo.';
         this.cargando = false;
       },
       error: (err) => {

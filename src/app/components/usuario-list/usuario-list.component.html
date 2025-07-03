@@ -1,225 +1,271 @@
 <div class="container mt-4">
+  <h3 class="mb-4 fw-bold d-flex align-items-center text-primary">
+    <i class="bi bi-people-fill me-2"></i> Listado de Usuarios
+  </h3>
 
-  <h2>Listado de Usuarios</h2>
-
-  <button class="btn btn-primary mb-3" (click)="abrirModalCrear()">
-    <i class="bi bi-person-plus-fill"></i> Crear Usuario
+  <button class="btn btn-primary mb-3 d-flex align-items-center" (click)="abrirModalCrear()">
+    <i class="bi bi-person-plus-fill me-2"></i> Crear Usuario
   </button>
 
   <div *ngIf="cargando" class="alert alert-info">Cargando usuarios...</div>
   <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
   <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
 
-  <table class="table table-striped" *ngIf="usuarios.length > 0">
-    <thead>
-      <tr>
-        <th>Nombres</th>
-        <th>Apellidos</th>
-        <th>Cédula</th>
-        <th>Teléfono</th>
-        <th>Correo</th>
-        <th>Rol</th>
-        <th>Grupo</th>
-        <th>Estado</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let usuario of usuarios">
-        <td>{{ usuario.nombres }}</td>
-        <td>{{ usuario.apellidos }}</td>
-        <td>{{ usuario.cedula }}</td>
-        <td>{{ usuario.telefono }}</td>
-        <td>{{ usuario.correo }}</td>
-        <td>{{ usuario.rol }}</td>
-        <td>{{ usuario.grupo }}</td>
-        <td>
-          <span class="badge d-flex align-items-center" [ngClass]="usuario.estado ? 'bg-success' : 'bg-secondary'">
-            <i 
-              [ngClass]="
-                usuario.estado ? 'bi bi-check-circle-fill me-1' : 'bi bi-x-circle-fill me-1'
-              "
-              aria-hidden="true"
-            ></i>
-            {{ usuario.estado ? 'Activo' : 'Inactivo' }}
-          </span>
-        </td>
-        <td>
-          <button 
-            class="btn btn-sm btn-outline-warning me-2" 
-            (click)="abrirModalEditar(usuario)" 
-            title="Editar usuario"
-            aria-label="Editar usuario"
-          >
-            <i class="bi bi-pencil-fill"></i>
-          </button>
-          <button 
-            class="btn btn-sm btn-outline-secondary" 
-            (click)="cambiarEstado(usuario)" 
-            [title]="usuario.estado ? 'Desactivar usuario' : 'Activar usuario'"
-            [attr.aria-label]="usuario.estado ? 'Desactivar usuario' : 'Activar usuario'"
-          >
-            <i class="bi" [ngClass]="usuario.estado ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-responsive" *ngIf="usuarios.length > 0" style="max-height: 500px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: .5rem;">
+    <table class="table table-hover table-bordered align-middle text-nowrap mb-0">
+      <thead class="table-primary position-sticky top-0">
+        <tr>
+          <th>ID</th>
+          <th>Nombres</th>
+          <th>Apellidos</th>
+          <th>Cédula</th>
+          <th>Teléfono</th>
+          <th>Correo</th>
+          <th>Rol</th>
+          <th>Grupo</th>
+          <th>Estado</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.idUsuario }}</td>
+          <td>{{ usuario.nombres }}</td>
+          <td>{{ usuario.apellidos }}</td>
+          <td>{{ usuario.cedula }}</td>
+          <td>{{ usuario.telefono }}</td>
+          <td>{{ usuario.correo }}</td>
+          <td>{{ usuario.rol | uppercase }}</td>
+          <td>{{ usuario.grupo | uppercase }}</td>
+          <td>
+            <span class="badge d-flex align-items-center"
+                  [ngClass]="usuario.estado ? 'bg-success' : 'bg-secondary'">
+              <i [ngClass]="usuario.estado ? 'bi bi-check-circle-fill me-1' : 'bi bi-x-circle-fill me-1'" aria-hidden="true"></i>
+              {{ usuario.estado ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="text-center">
+            <button class="btn btn-outline-warning btn-sm btn-icon me-2"
+                    (click)="abrirModalEditar(usuario)"
+                    title="Editar usuario"
+                    aria-label="Editar usuario">
+              <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-outline-secondary btn-sm btn-icon"
+                    (click)="cambiarEstado(usuario)"
+                    [title]="usuario.estado ? 'Desactivar usuario' : 'Activar usuario'"
+                    [attr.aria-label]="usuario.estado ? 'Desactivar usuario' : 'Activar usuario'">
+              <i class="bi" [ngClass]="usuario.estado ? 'bi-toggle-on' : 'bi-toggle-off'"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="usuarios.length === 0 && !cargando" class="alert alert-secondary">
+    No hay usuarios registrados.
+  </div>
 
   <!-- MODAL CREAR USUARIO -->
-<div *ngIf="mostrarModalCrear" class="modal show fade d-block" tabindex="-1" aria-modal="true" role="dialog">
-  <div class="modal-dialog">
-    <form [formGroup]="formCrear" (ngSubmit)="crearUsuario()" novalidate>
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">
+<div *ngIf="mostrarModalCrear" class="modal show fade d-block" tabindex="-1" aria-modal="true" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <form [formGroup]="formCrear" (ngSubmit)="crearUsuario()" novalidate class="w-100">
+      <div class="modal-content border-0 rounded-4 shadow bg-white p-4">
+
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title text-primary fw-bold">
             <i class="bi bi-person-plus-fill me-2"></i> Crear Usuario
           </h5>
           <button type="button" class="btn-close" (click)="cerrarModalCrear()" aria-label="Cerrar"></button>
         </div>
 
-        <div class="modal-body">  <!-- Falta este contenedor para el body del modal -->
-          <!-- Campos formulario crear -->
-          <div class="mb-3" *ngFor="let campo of ['nombres', 'apellidos', 'cedula', 'telefono', 'correo']">
-            <label class="form-label" [attr.for]="campo">{{ campo | titlecase }}</label>
-            <input 
-              class="form-control" 
-              [id]="campo" 
-              [type]="campo === 'correo' ? 'email' : 'text'" 
-              [formControlName]="campo" 
-              [attr.aria-describedby]="campo + 'Help'"
-            />
-            <div class="text-danger" *ngIf="formCrear.get(campo)?.touched && formCrear.get(campo)?.invalid" [id]="campo + 'Help'">
-              {{
-                campo === 'correo'
-                  ? 'Correo inválido'
-                  : campo === 'cedula' || campo === 'telefono'
-                  ? 'Debe contener exactamente 10 números'
-                  : 'Solo letras permitidas'
-              }}
+        <div class="modal-body pt-3">
+          <div class="container-fluid">
+            <div class="row g-4">
+              <!-- Campos organizados en 2 columnas -->
+              <div class="col-md-6" *ngFor="let campo of ['nombres', 'apellidos', 'cedula', 'telefono', 'correo']">
+                <label class="form-label fw-semibold" [attr.for]="campo">
+                  {{ campo | titlecase }} <span class="text-danger">*</span>
+                </label>
+                <input
+                  class="form-control"
+                  [id]="campo"
+                  [type]="campo === 'correo' ? 'email' : 'text'"
+                  [formControlName]="campo"
+                  [attr.aria-describedby]="campo + 'Help'"
+                  placeholder="Ingrese {{ campo | titlecase }}"
+                />
+                <div class="text-danger small mt-1" *ngIf="formCrear.get(campo)?.touched && formCrear.get(campo)?.invalid" [id]="campo + 'Help'">
+                  {{
+                    campo === 'correo'
+                      ? 'Correo inválido'
+                      : campo === 'cedula' || campo === 'telefono'
+                      ? 'Debe contener exactamente 10 números'
+                      : 'Solo letras permitidas'
+                  }}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Rol <span class="text-danger">*</span></label>
+                <select class="form-select" formControlName="idRol" aria-label="Seleccionar rol">
+                  <option value="0">Seleccione un rol</option>
+                  <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</option>
+                </select>
+                <div *ngIf="formCrear.get('idRol')?.touched && formCrear.get('idRol')?.value == 0" class="text-danger small mt-1">
+                  Selecciona un rol válido.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Grupo <span class="text-danger">*</span></label>
+                <select class="form-select" formControlName="idGrupo" aria-label="Seleccionar grupo">
+                  <option value="0">Seleccione un grupo</option>
+                  <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nombre }}</option>
+                </select>
+                <div *ngIf="formCrear.get('idGrupo')?.touched && formCrear.get('idGrupo')?.value == 0" class="text-danger small mt-1">
+                  Selecciona un grupo válido.
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div *ngIf="exitoCrear" class="alert alert-success mt-2 mb-0" role="alert">
+                  <i class="bi bi-check-circle-fill me-2"></i> {{ exitoCrear }}
+                </div>
+                <div *ngIf="errorCrear" class="alert alert-danger mt-2 mb-0" role="alert">
+                  <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorCrear }}
+                </div>
+              </div>
             </div>
           </div>
-
-          <div class="mb-3">
-            <label class="form-label">Rol</label>
-            <select class="form-select" formControlName="idRol" aria-label="Seleccionar rol">
-              <option value="0">Seleccione un rol</option>
-              <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</option>
-            </select>
-            <div *ngIf="formCrear.get('idRol')?.touched && formCrear.get('idRol')?.value == 0" class="text-danger">
-              Selecciona un rol válido.
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Grupo</label>
-            <select class="form-select" formControlName="idGrupo" aria-label="Seleccionar grupo">
-              <option value="0">Seleccione un grupo</option>
-              <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nombre }}</option>
-            </select>
-            <div *ngIf="formCrear.get('idGrupo')?.touched && formCrear.get('idGrupo')?.value == 0" class="text-danger">
-              Selecciona un grupo válido.
-            </div>
-          </div>
-
-          <div *ngIf="exitoCrear" class="alert alert-success" role="alert">
-  {{ exitoCrear }}
-  
-</div>
-
-<!-- Mensaje error -->
-<div *ngIf="errorCrear" class="alert alert-danger" role="alert">
-  {{ errorCrear }}
-  
-</div>
-
-        </div> <!-- cierre modal-body -->
-
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" [disabled]="creando">
-            <i class="bi bi-check-lg me-1"></i> Crear
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="cerrarModalCrear()">
-            <i class="bi bi-x-lg me-1"></i> Cancelar
-          </button>
         </div>
+
+        <div class="modal-footer border-0 pt-3">
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="formCrear.invalid || creando"
+    title="Crear usuario"
+    aria-label="Crear usuario"
+  >
+    <i class="bi bi-check-circle"></i>
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    (click)="cerrarModalCrear()"
+    title="Cancelar creación"
+    aria-label="Cancelar creación"
+  >
+    <i class="bi bi-x-circle"></i>
+  </button>
+</div>
+
+
       </div>
     </form>
   </div>
 </div>
 
-
   <!-- MODAL EDITAR USUARIO -->
-  <div *ngIf="mostrarModalEditar" class="modal show fade d-block" tabindex="-1" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-      <form [formGroup]="formEditar" (ngSubmit)="editarUsuario()" novalidate>
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">
-              <i class="bi bi-pencil-fill me-2"></i> Editar Usuario
-            </h5>
-            <button type="button" class="btn-close" (click)="cerrarModalEditar()" aria-label="Cerrar"></button>
+<div *ngIf="mostrarModalEditar" class="modal show fade d-block" tabindex="-1" aria-modal="true" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <form [formGroup]="formEditar" (ngSubmit)="editarUsuario()" novalidate class="w-100">
+      <div class="modal-content border-0 rounded-4 shadow bg-white p-4">
+
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title text-primary fw-bold">
+            <i class="bi bi-pencil-fill me-2"></i> Editar Usuario
+          </h5>
+          <button type="button" class="btn-close" (click)="cerrarModalEditar()" aria-label="Cerrar"></button>
+        </div>
+
+        <div class="modal-body pt-3">
+          <div *ngIf="errorEditar" class="alert alert-danger mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorEditar }}
           </div>
-          <div class="modal-body">
-            <div *ngIf="errorEditar" class="alert alert-danger">{{ errorEditar }}</div>
-            <div *ngIf="exitoEditar" class="alert alert-success">{{ exitoEditar }}</div>
-
-            <!-- Campos formulario editar -->
-            <div class="mb-3" *ngFor="let campo of ['nombres', 'apellidos', 'cedula', 'telefono', 'correo']">
-              <label class="form-label" [attr.for]="campo">{{ campo | titlecase }}</label>
-              <input 
-                class="form-control" 
-                [id]="campo" 
-                [type]="campo === 'correo' ? 'email' : 'text'" 
-                [formControlName]="campo" 
-                [attr.aria-describedby]="campo + 'HelpEdit'"
-              />
-              <div class="text-danger" *ngIf="formEditar.get(campo)?.touched && formEditar.get(campo)?.invalid" [id]="campo + 'HelpEdit'">
-                {{
-                  campo === 'correo'
-                    ? 'Correo inválido'
-                    : campo === 'cedula' || campo === 'telefono'
-                    ? 'Debe contener exactamente 10 números'
-                    : 'Solo letras permitidas'
-                }}
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Rol</label>
-              <select class="form-select" formControlName="idRol" aria-label="Seleccionar rol">
-                <option value="0">Seleccione un rol</option>
-                <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</option>
-              </select>
-              <div *ngIf="formEditar.get('idRol')?.touched && formEditar.get('idRol')?.value == 0" class="text-danger">
-                Selecciona un rol válido.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Grupo</label>
-              <select class="form-select" formControlName="idGrupo" aria-label="Seleccionar grupo">
-                <option value="0">Seleccione un grupo</option>
-                <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nombre }}</option>
-              </select>
-              <div *ngIf="formEditar.get('idGrupo')?.touched && formEditar.get('idGrupo')?.value == 0" class="text-danger">
-                Selecciona un grupo válido.
-              </div>
-            </div>
-
+          <div *ngIf="exitoEditar" class="alert alert-success mb-3" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> {{ exitoEditar }}
           </div>
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-success" [disabled]="editando">
-              <i class="bi bi-check-lg me-1"></i> Guardar Cambios
-            </button>
-            <button type="button" class="btn btn-secondary" (click)="cerrarModalEditar()">
-              <i class="bi bi-x-lg me-1"></i> Cancelar
-            </button>
+
+          <div class="container-fluid">
+            <div class="row g-4">
+              <!-- Campos organizados en 2 columnas -->
+              <div class="col-md-6" *ngFor="let campo of ['nombres', 'apellidos', 'cedula', 'telefono', 'correo']">
+                <label class="form-label fw-semibold" [attr.for]="campo">{{ campo | titlecase }}</label>
+                <input 
+                  class="form-control" 
+                  [id]="campo" 
+                  [type]="campo === 'correo' ? 'email' : 'text'" 
+                  [formControlName]="campo" 
+                  [attr.aria-describedby]="campo + 'HelpEdit'"
+                  placeholder="Ingrese {{ campo | titlecase }}"
+                />
+                <div class="text-danger small mt-1" *ngIf="formEditar.get(campo)?.touched && formEditar.get(campo)?.invalid" [id]="campo + 'HelpEdit'">
+                  {{
+                    campo === 'correo'
+                      ? 'Correo inválido'
+                      : campo === 'cedula' || campo === 'telefono'
+                      ? 'Debe contener exactamente 10 números'
+                      : 'Solo letras permitidas'
+                  }}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Rol</label>
+                <select class="form-select" formControlName="idRol" aria-label="Seleccionar rol">
+                  <option value="0">Seleccione un rol</option>
+                  <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</option>
+                </select>
+                <div *ngIf="formEditar.get('idRol')?.touched && formEditar.get('idRol')?.value == 0" class="text-danger small mt-1">
+                  Selecciona un rol válido.
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Grupo</label>
+                <select class="form-select" formControlName="idGrupo" aria-label="Seleccionar grupo">
+                  <option value="0">Seleccione un grupo</option>
+                  <option *ngFor="let grupo of grupos" [value]="grupo.id">{{ grupo.nombre }}</option>
+                </select>
+                <div *ngIf="formEditar.get('idGrupo')?.touched && formEditar.get('idGrupo')?.value == 0" class="text-danger small mt-1">
+                  Selecciona un grupo válido.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </form>
-    </div>
+
+        <div class="modal-footer border-0 pt-3">
+  <button
+    type="submit"
+    class="btn btn-primary"
+    [disabled]="editando"
+    title="Guardar cambios"
+    aria-label="Guardar cambios"
+  >
+    <i class="bi bi-check-circle"></i>
+  </button>
+
+  <button
+    type="button"
+    class="btn btn-outline-secondary"
+    (click)="cerrarModalEditar()"
+    title="Cancelar edición"
+    aria-label="Cancelar edición"
+  >
+    <i class="bi bi-x-circle"></i>
+  </button>
+</div>
+
+      </div>
+    </form>
   </div>
+</div>
+
 
 </div>
 

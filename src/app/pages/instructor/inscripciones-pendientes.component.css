@@ -1,0 +1,10 @@
+.btn-gradient-success {
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #fff;
+  }
+
+  .btn-gradient-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: #fff;
+  }
+  
