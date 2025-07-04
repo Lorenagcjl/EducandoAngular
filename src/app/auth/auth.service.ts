@@ -48,7 +48,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem(this.tokenKey);
     this.currentRoleSubject.next(null);
-    this.router.navigate(['/login']); //se agregó
+    this.router.navigate(['/home']); //se agregó
   }
 
   getToken(): string | null {
