@@ -56,10 +56,19 @@
       </div>
 
       <!-- LUGAR -->
-      <div class="col-12">
-        <label class="form-label">Lugar</label>
-        <input type="text" class="form-control" formControlName="lugar" maxlength="150">
-      </div>
+<div class="col-12">
+  <label class="form-label">
+    Lugar <span class="text-danger">*</span>
+  </label>
+  <input type="text"
+         class="form-control"
+         formControlName="lugar"
+         maxlength="150"
+         [ngClass]="{'is-invalid': f['lugar'].invalid && (f['lugar'].touched || f['lugar'].dirty)}">
+  <div class="invalid-feedback">
+    El lugar es obligatorio (máx. 50 caracteres).
+  </div>
+</div>
 
       <!-- DESCRIPCIÓN -->
       <div class="col-12">

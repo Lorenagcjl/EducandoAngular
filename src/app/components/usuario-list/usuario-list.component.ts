@@ -16,6 +16,7 @@ import { SolicitudesRegistroService } from '../../services/solicitudes-registro.
 export class UsuarioListComponent implements OnInit {
 
   usuarios: UsuarioReadDTO[] = [];
+  filtroNombre: string = '';
   cargando = false;
   error = '';
   mensaje = '';
@@ -212,4 +213,12 @@ export class UsuarioListComponent implements OnInit {
     const grupo = this.grupos.find(g => g.nombre.toLowerCase() === nombre.toLowerCase());
     return grupo?.id || 0;
   }
+  //agregado para buscar por nombre
+  get usuariosFiltrados(): UsuarioReadDTO[] {
+  if (!this.filtroNombre) {
+    return this.usuarios;
+  }
+  const filtro = this.filtroNombre.trim().toLowerCase();
+  return this.usuarios.filter(u => u.nombres.toLowerCase().includes(filtro) || u.apellidos.toLowerCase().includes(filtro));
+}
 }

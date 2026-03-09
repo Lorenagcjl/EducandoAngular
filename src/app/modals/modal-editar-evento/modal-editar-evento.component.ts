@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Evento } from '../../models/evento.model';
 import { EventosService } from '../../services/evento.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-editar-evento',
@@ -63,15 +64,25 @@ eliminarImagen(index: number): void {
 
     this.eventoService.subirImagen(formData).subscribe({
       next: res => {
-        alert('Imágenes subidas correctamente');
+       Swal.fire({
+        icon: 'success',
+        title: 'Imágenes subidas correctamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
         this.imagenesNuevas = [];
         this.previewImagenes = [];
       },
       error: err => {
         console.error(err);
-        alert('Error al subir imágenes');
-      }
-    });
+        Swal.fire({
+        icon: 'error',
+        title: 'Error al subir imágenes',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+  });
   }
 
   guardarCambios(): void {
@@ -91,5 +102,11 @@ eliminarImagen(index: number): void {
       datosEvento,
       imagenes: this.imagenesNuevas
     });
+    Swal.fire({
+    icon: 'success',
+    title: 'Evento actualizado correctamente',
+    timer: 2000,
+    showConfirmButton: false
+  });
   }
 }

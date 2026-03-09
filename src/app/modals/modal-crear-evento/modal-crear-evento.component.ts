@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EventosService } from '../../services/evento.service';
 import { fechaNoPasadaValidator } from '../../components/calendario-eventos.component';
+import Swal from 'sweetalert2';
 
 @Component({
   standalone: true,
@@ -29,7 +30,7 @@ export class ModalCrearEventoComponent implements OnInit {
       fechaEvento: ['', [Validators.required, fechaNoPasadaValidator()]],
       inicioEvento:['', Validators.required],
       finEvento: [''],
-      lugar: ['',Validators.maxLength(50)]
+      lugar: ['',[Validators.required, Validators.maxLength(50)]]
     });
   }
 
@@ -59,10 +60,28 @@ export class ModalCrearEventoComponent implements OnInit {
   console.log(evento);
 
   this.eventosService.crearEvento(evento).subscribe({
-    next: () => this.activeModal.close('creado'),
+    next: () => {
+      // Mostrar SweetAlert2
+      Swal.fire({
+        icon: 'success',
+        title: 'Evento creado',
+        text: 'El evento ha sido creado correctamente',
+        timer: 2000,          // 2 segundos
+        showConfirmButton: false
+      }).then(() => {
+        this.activeModal.close('creado'); // Cerrar modal después de aceptar
+      });
+    },
     error: err => {
       this.error = 'Error al crear el evento';
       console.error(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo crear el evento. Intenta de nuevo.',
+        timer: 2000,
+        showConfirmButton: false
+      });
     }
   });
 }

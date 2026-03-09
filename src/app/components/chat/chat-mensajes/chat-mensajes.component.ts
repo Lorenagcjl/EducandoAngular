@@ -172,7 +172,6 @@ export class ChatMensajesComponent implements OnInit, AfterViewChecked, OnChange
     this.mensajeService.editarMensaje(editDto).subscribe({
       next: () => {
         mensaje.contenido = contenido;
-        mensaje.fechaEnvio = new Date().toISOString();
         this.cancelarEdicion();
       },
       error: err => console.error('Error al editar mensaje', err)

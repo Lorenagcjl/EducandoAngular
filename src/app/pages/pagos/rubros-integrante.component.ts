@@ -125,10 +125,11 @@ formulario = {
     },
     error: error => {
       console.error('Error al realizar el pago:', error);
+      const mensaje = error.error?.mensaje || 'Hubo un error al procesar el pago.';
       Swal.fire({ 
         icon: 'error',
         title: 'Error',
-        text: 'Hubo un error al procesar el pago.',
+        text: mensaje,
       });
     }
   });
@@ -141,7 +142,7 @@ quitarArchivo(): void {
 }
 get totalGeneral(): number {
   return this.rubros
-    .filter(r => r.estado !== 'Pagado') // o r.estado === 'Pendiente'
+    .filter(r => r.estado === 'Pendiente') // Solo sumamos lo que estrictamente está pendiente
     .reduce((suma, r) => suma + r.totalPagar, 0);
 }
 }

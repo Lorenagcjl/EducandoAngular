@@ -7,6 +7,8 @@ import { Subscription, interval } from 'rxjs';
 import { HostListener } from '@angular/core';
 import { MensajeService } from '../services/mensaje.service';
 import { UsuarioService } from '../services/usuario.service';
+import { PagoService } from '../services/pago.service';
+import Swal from 'sweetalert2'
 
 interface Notificacion {
   idNotificacionUsuario: number;
@@ -14,7 +16,7 @@ interface Notificacion {
   contenido: string;
   leido: boolean;
   fechaNotificacion: string;
-} 
+}  
 @Component({
   selector: 'app-dashboard-integrante',
   standalone: true,
@@ -49,7 +51,8 @@ mostrarDropdown = false;
     private router: Router,
     private notificacionesService: NotificacionesService,
     private mensajeService: MensajeService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private pagosService: PagoService
   ) {}
 
    ngOnInit(): void {
@@ -66,6 +69,7 @@ mostrarDropdown = false;
   if (perfil) {
     this.nombreUsuario = `${perfil.nombres || ''} ${perfil.apellidos || ''}`.trim();
     this.fotoPerfil = perfil.foto || null;
+    this.checkDeuda();
   }
 });
 this.usuarioService.refrescarPerfil(); // Carga inicial
@@ -85,7 +89,45 @@ this.usuarioService.refrescarPerfil(); // Carga inicial
       this.mostrarCarrusel = event.urlAfterRedirects === '/integrante';
     }
   });
+  
   }
+  checkDeuda(): void {
+  this.pagosService.obtenerRubros().subscribe({
+    next: rubros => {
+      const ahora = new Date();
+
+      // Buscar cualquier rubro activo pendiente y vencido
+      const rubroVencido = rubros.find(r =>
+        r.estado.toLowerCase() !== 'cancelado' &&
+        new Date(r.fechaMaximaPagar) < ahora
+      );
+
+      if (rubroVencido) {
+        Swal.fire({
+          icon: 'warning',
+          title: '¡Atención!',
+          text: 'Usted tiene una deuda pendiente que ya está vencida. Por favor, realice su pago para visualizar la información.',
+          showCancelButton: true,
+          confirmButtonText: 'Ir a Pagos',
+          cancelButtonText: 'Cerrar',
+          allowOutsideClick: false
+        }).then(result => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/integrante/pagos']);
+          }
+        });
+        return;
+      }
+
+      console.log('No tiene deuda vencida');
+    },
+    error: err => {
+      console.error('Error al verificar deuda:', err);
+    }
+  });
+}
+
+
   cargarCantidadNoLeidos(): void {
     this.mensajeService.obtenerCantidadNoLeidos().subscribe({
       next: cantidad => this.cantidadNoLeidos = cantidad,

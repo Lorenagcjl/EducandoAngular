@@ -12,6 +12,7 @@
           <th>Método</th>
           <th>Valor</th>
           <th>Cuenta</th>
+          <th>Nº Comprobante</th>
           <th>Fecha</th>
           <th>Comprobante</th>
           <th class="text-center">Acciones</th>
@@ -24,6 +25,7 @@
           <td>{{ pago.metodoPago }}</td>
           <td>${{ pago.totalPagar?.toFixed(2) || pago.valor?.toFixed(2) || '0.00' }}</td>
           <td>{{ pago.cuenta }}</td>
+          <td>{{pago.numeroComprobante}}</td>
           <td>{{ pago.fechaTransaccion | date: 'shortDate' }}</td>
           <td class="text-center">
             <button class="btn btn-outline-primary btn-sm btn-icon" (click)="descargarComprobante(pago.idPago)" title="Descargar comprobante">

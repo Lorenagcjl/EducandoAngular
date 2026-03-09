@@ -125,3 +125,18 @@
   background-color: #aaa;
   cursor: not-allowed;
 }
+
+.acciones button,
+.editar-mensaje button {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 1.2rem;
+  margin-left: 5px;
+}
+
+.acciones button:hover,
+.editar-mensaje button:hover {
+  color: #0d6efd; /* Azul Bootstrap */
+}

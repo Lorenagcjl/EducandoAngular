@@ -4,7 +4,7 @@ export interface Pago {
   metodoPago: string;
   valor: number;
   numeroComprobante: string;
-  fechaTransaccion: string; // usar Date solo si vas a transformarlo
+  fechaTransaccion: string; // usar Date solo si se va a transformarlo
   imagenComprobante: File;
   estadoPago?: string;
   idRubro?: number;

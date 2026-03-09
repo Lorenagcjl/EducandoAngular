@@ -19,10 +19,10 @@
 
       <div *ngIf="esMio(mensaje) && mensajeSeleccionadoId === mensaje.idMensaje" class="acciones">
         <button type="button" *ngIf="puedeEditar(mensaje)" (click)="comenzarEdicion(mensaje); $event.stopPropagation()" title="Editar">
-          ✏️
+          <i class="bi bi-pencil-square"></i>
         </button>
         <button type="button" (click)="confirmarEliminar(mensaje.idMensaje); $event.stopPropagation()" title="Eliminar">
-          🗑️
+          <i class="bi bi-trash-fill"></i>
         </button>
       </div>
     </div>
@@ -30,8 +30,12 @@
     <!-- Vista de edición -->
     <div *ngIf="editandoMensajeId === mensaje.idMensaje" class="editar-mensaje" (click)="$event.stopPropagation()">
       <input [(ngModel)]="mensajeEditadoTexto" />
-      <button type="button" (click)="guardarEdicion(mensaje)" title="Guardar">💾</button>
-      <button type="button" (click)="cancelarEdicion()" title="Cancelar">❌</button>
+      <button type="button" (click)="guardarEdicion(mensaje)" title="Guardar">
+        <i class="bi bi-save-fill"></i>
+      </button>
+      <button type="button" (click)="cancelarEdicion()" title="Cancelar">
+        <i class="bi bi-x-circle-fill"></i>
+      </button>
     </div>
   </div>
 </div>
